@@ -7,9 +7,9 @@
   <title>Agenda de pacientes | Clínica DM</title>
   <style>
     :root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#183047;background:#f7f9fc;font-synthesis:none}
-    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+    *{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}[hidden]{display:none!important}
     :focus-visible{outline:3px solid #86b9f5;outline-offset:2px}
-    .shell{max-width:1580px;margin:auto;padding:28px 28px 40px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}
+    .shell{max-width:1580px;margin:auto;padding:28px 28px 40px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}.nav{display:flex;gap:7px;margin-right:auto;margin-left:26px}.nav a{padding:9px 13px;border-radius:8px;color:#386280;text-decoration:none;font-weight:650}.nav a:hover,.nav a.active{background:#eaf4ff;color:#126cc7}
     .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:18px;letter-spacing:-.03em;color:#153b66}.brand-mark{width:39px;height:39px;border-radius:11px;background:#146bc5;color:white;display:grid;place-items:center;font-size:23px;box-shadow:0 6px 15px #146bc529}.brand span{font-size:12px;display:block;color:#8293a5;font-weight:500;letter-spacing:0;margin-top:1px}
     .pill{border:1px solid #dde5ed;border-radius:999px;background:#fff;color:#688094;font-size:12px;padding:8px 12px}
     h1{font-size:26px;letter-spacing:-.04em;margin:0 0 5px;color:#1265bd}p{margin:0}.subtitle{color:#70879a;font-size:14px}
@@ -32,13 +32,14 @@
     .empty-note{margin:12px 20px;color:#8ca0b0;font-size:12px}.mobile-hint{display:none}
     dialog{border:0;border-radius:15px;padding:0;width:min(530px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;box-shadow:0 24px 70px #102f4e55;color:#183047}dialog::backdrop{background:#102b4680}.modal-header{display:flex;align-items:start;justify-content:space-between;padding:22px 24px 16px;border-bottom:1px solid #e6ecf1}.modal-header h2{font-size:20px;letter-spacing:-.03em;margin:0}.modal-header p{color:#7b8e9f;font-size:13px;margin-top:4px}.close{border:0;background:transparent;color:#71899d;font-size:26px;line-height:1;padding:0 2px}.form-body{padding:21px 24px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#506b80;font-weight:700}.field.full{grid-column:1/-1}.field input,.field select{height:41px;width:100%;border:1px solid #cddae5;border-radius:8px;background:#fff;color:#17344d;padding:8px 11px;font-weight:400}.field input:focus,.field select:focus{outline:2px solid #b6d9fa;border-color:#3a92df}.form-error{color:#b23a40;font-size:13px;min-height:20px;margin:13px 0 0}.modal-footer{padding:15px 24px 22px;display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}.modal-footer .danger{margin-right:auto}.wait-list{padding:5px 24px 24px;max-height:50vh;overflow:auto}.wait-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e8edf2}.wait-row strong,.wait-row small{display:block}.wait-row small{color:#758b9d;margin-top:3px}.wait-empty{color:#72889a;padding:18px 0}
     @media(max-width:900px){.shell{padding:18px 13px}.intro{align-items:start;flex-direction:column}.intro-actions{width:100%}.toolbar{padding:13px;align-items:stretch}.toolbar-left,.toolbar-right{flex-wrap:wrap}.toolbar-right{width:100%}.search{flex:1;min-width:180px}.search input{width:100%}.summary{padding:12px 13px}.calendar-scroll{max-height:65vh}}
-    @media(max-width:600px){h1{font-size:23px}.brand{font-size:16px}.pill{display:none}.btn{min-height:39px;padding:8px 11px;font-size:12px}.toolbar .date-range{min-width:138px;font-size:13px}.legend{display:none}.mobile-hint{display:block;font-size:11px;padding:8px 13px;color:#7991a4}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.cal-head{height:62px}.day-head b{font-size:14px}.day-head{font-size:11px}}
+    .form-options{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px;font-size:13px;color:#536f83}.form-options a{color:#126cc7;text-decoration:none;font-weight:650}.form-options a:hover{text-decoration:underline}.checkline{display:flex;align-items:center;gap:7px;font-weight:650}.checkline input{accent-color:#126cc7}.form-hint{color:#8798a7;font-size:11px;margin:11px 0 0}.field textarea{min-height:62px;width:100%;border:1px solid #cddae5;border-radius:8px;padding:8px 11px;resize:vertical}.event.bloqueado{background:#e7eaf0;border-color:#97a9b8;color:#536779}.field select{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media(max-width:600px){h1{font-size:23px}.brand{font-size:16px}.pill{display:none}.topbar{flex-wrap:wrap}.nav{order:3;width:100%;margin:0}.btn{min-height:39px;padding:8px 11px;font-size:12px}.toolbar .date-range{min-width:138px;font-size:13px}.legend{display:none}.mobile-hint{display:block;font-size:11px;padding:8px 13px;color:#7991a4}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.cal-head{height:62px}.day-head b{font-size:14px}.day-head{font-size:11px}}
     @media print{.shell{max-width:none;padding:0}.topbar,.intro-actions,.toolbar,.mobile-hint,.empty-note{display:none!important}.panel{border:0;box-shadow:none}.calendar-scroll{overflow:visible;max-height:none}.calendar{min-width:0}.cal-head{position:static}button.slot{display:none}.event{print-color-adjust:exact;-webkit-print-color-adjust:exact}.cal-body{height:var(--grid-height)}}
   </style>
 </head>
 <body>
   <main class="shell">
-    <header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true">✚</div><div>Clínica DM<span>Agenda de pacientes</span></div></div><span class="pill">Dados salvos neste navegador</span></header>
+    <header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true">✚</div><div>Clínica DM<span>Recepção</span></div></div><nav class="nav" aria-label="Menu principal"><a class="active" href="index.html" aria-current="page">Agenda</a><a href="patients.html">Pacientes</a><a href="schedules.html">Cadastro de agendas</a><a href="queue.html">Senhas</a></nav><span class="pill">Dados salvos neste navegador</span></header>
     <section class="intro"><div><h1>Agendamentos de pacientes</h1><p class="subtitle">Organize consultas e exames em uma só agenda.</p></div><div class="intro-actions"><button class="btn" id="waitButton" type="button">◷ &nbsp;Aguardando confirmação</button><button class="btn" id="printButton" type="button">▤ &nbsp;Imprimir agenda</button><button class="btn primary" id="newButton" type="button">＋ &nbsp;Novo agendamento</button></div></section>
     <section class="panel" aria-label="Calendário de agendamentos">
       <div class="toolbar"><div class="toolbar-left"><div class="navgroup"><button class="btn icon" id="previous" type="button" aria-label="Período anterior">‹</button><button class="btn" id="today" type="button">Hoje</button><button class="btn icon" id="next" type="button" aria-label="Próximo período">›</button></div><span class="date-range" id="dateRange"></span><input class="date-jump" id="dateJump" type="date" aria-label="Ir para uma data" title="Ir para uma data"><div class="switch"><button class="btn" id="dayView" type="button">Dia</button><button class="btn" id="weekView" type="button">Semana</button></div></div><div class="toolbar-right"><label class="search"><input id="search" type="search" autocomplete="off" placeholder="Busque um paciente" aria-label="Buscar paciente"><span aria-hidden="true">⌕</span></label><select id="statusFilter" aria-label="Filtrar por situação"><option value="">Todas as situações</option><option value="Agendado">Agendado</option><option value="Confirmado">Confirmado</option><option value="Concluído">Concluído</option><option value="Cancelado">Cancelado</option></select></div></div>
@@ -47,12 +48,32 @@
     </section>
   </main>
 
-  <dialog id="appointmentDialog" aria-labelledby="formTitle"><form id="appointmentForm" novalidate><div class="modal-header"><div><h2 id="formTitle">Novo agendamento</h2><p>Preencha os dados do atendimento.</p></div><button class="close" type="button" data-close aria-label="Fechar">×</button></div><div class="form-body"><div class="fields"><label class="field full">Nome do paciente <input id="patient" name="patient" required maxlength="100" autocomplete="off" placeholder="Nome completo"></label><label class="field">Atendimento <select id="service" name="service" required><option value="Consulta">Consulta</option><option value="Ultrassonografia">Ultrassonografia</option><option value="Exame">Exame</option><option value="Procedimento">Procedimento</option></select></label><label class="field">Profissional <input id="professional" name="professional" maxlength="80" placeholder="Nome do profissional"></label><label class="field">Data <input id="date" name="date" type="date" required></label><label class="field">Horário <input id="time" name="time" type="time" min="07:00" max="18:45" step="900" required></label><label class="field">Duração <select id="duration" name="duration"><option value="15">15 minutos</option><option value="30" selected>30 minutos</option><option value="45">45 minutos</option><option value="60">1 hora</option><option value="90">1 hora e 30 minutos</option><option value="120">2 horas</option></select></label><label class="field">Situação <select id="status" name="status"><option>Agendado</option><option>Confirmado</option><option>Concluído</option><option>Cancelado</option></select></label></div><p id="formError" class="form-error" role="alert"></p></div><div class="modal-footer"><button class="btn danger" id="deleteButton" type="button" hidden>Excluir</button><button class="btn" type="button" data-close>Voltar</button><button class="btn primary" type="submit">Salvar agendamento</button></div></form></dialog>
+  <dialog id="appointmentDialog" aria-labelledby="formTitle"><form id="appointmentForm" novalidate>
+    <div class="modal-header"><div><h2 id="formTitle">Novo agendamento</h2><p>Preencha os dados do atendimento.</p></div><button class="close" type="button" data-close aria-label="Fechar">×</button></div>
+    <div class="form-body"><div class="form-options"><label class="checkline"><input id="blocked" type="checkbox"> Bloquear horário</label><span><a href="patients.html">＋ Paciente</a> · <a href="schedules.html">＋ Agenda</a></span></div>
+      <div class="fields">
+        <label class="field full" id="patientField">Paciente cadastrado<select id="patient" required><option value="">Selecione um paciente</option></select></label>
+        <label class="field" id="serviceField">Atendimento<select id="service"></select></label>
+        <label class="field" id="procedureField">Procedimento<input id="procedure" maxlength="120" placeholder="Ex.: Ultrassom de abdome"></label>
+        <label class="field" id="quantityField">Quantidade<input id="quantity" type="number" min="1" max="99" value="1"></label>
+        <label class="field">Agenda do profissional<select id="professional"><option value="">Selecione a agenda</option></select></label>
+        <label class="field" id="phoneField">Celular<input id="phone" type="tel" placeholder="(00) 00000-0000"></label>
+        <label class="field" id="emailField">E-mail<input id="email" type="email" placeholder="Opcional"></label>
+        <label class="field" id="insuranceField">Convênio<input id="insurance" placeholder="Particular"></label>
+        <label class="field">Data<input id="date" type="date" required></label>
+        <label class="field">Horário<input id="time" type="time" min="07:00" max="18:45" step="900" required></label>
+        <label class="field">Duração<select id="duration"><option value="15">15 minutos</option><option value="30" selected>30 minutos</option><option value="45">45 minutos</option><option value="60">1 hora</option><option value="90">1 hora e 30 minutos</option><option value="120">2 horas</option></select></label>
+        <label class="field" id="statusField">Situação<select id="status"><option>Agendado</option><option>Confirmado</option><option>Concluído</option><option>Cancelado</option></select></label>
+        <label class="field" id="repeatField">Repetição<select id="repeat"><option value="1">Não se repete</option><option value="4">Semanal por 4 semanas</option><option value="8">Semanal por 8 semanas</option></select></label>
+        <label class="field full" id="notesField">Observações da recepção<textarea id="notes" maxlength="500" placeholder="Informações administrativas para o agendamento"></textarea></label>
+      </div><p class="form-hint">Cadastros e agendamentos ficam somente neste navegador. Use dados fictícios nesta versão de demonstração.</p><p id="formError" class="form-error" role="alert"></p>
+    </div><div class="modal-footer"><button class="btn danger" id="deleteButton" type="button" hidden>Excluir</button><button class="btn" type="button" data-close>Voltar</button><button class="btn primary" type="submit">Salvar agendamento</button></div>
+  </form></dialog>
   <dialog id="waitDialog" aria-labelledby="waitTitle"><div class="modal-header"><div><h2 id="waitTitle">Aguardando confirmação</h2><p>Agendamentos pendentes de confirmação.</p></div><button class="close" type="button" data-close aria-label="Fechar">×</button></div><div id="waitList" class="wait-list"></div><div class="modal-footer"><button class="btn" type="button" data-close>Fechar</button></div></dialog>
   <script>
     (() => {
       'use strict';
-      const KEY = 'clinica-dm-agendamentos-v1';
+      const KEY = 'clinica-dm-agendamentos-v1', PATIENT_KEY = 'clinica-dm-pacientes-v1', CONFIG_KEY='clinica-dm-config-v1';
       const START = 7 * 60, END = 19 * 60, PX_PER_MINUTE = 1.6;
       const $ = id => document.getElementById(id);
       const fmtDay = new Intl.DateTimeFormat('pt-BR', {weekday:'long'});
@@ -65,6 +86,8 @@
       const clock = n => `${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`;
       const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
       function read() { try { const value = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(value) ? value.filter(a => a && a.id && a.date && a.time && a.patient) : []; } catch { return []; } }
+      function readPatients() { try { const value=JSON.parse(localStorage.getItem(PATIENT_KEY)||'[]'); return Array.isArray(value)?value:[]; } catch { return []; } }
+      function readConfig() { try { const value=JSON.parse(localStorage.getItem(CONFIG_KEY)||'null'); return value&&Array.isArray(value.professionals)&&Array.isArray(value.services)?value:{professionals:[],services:['Consulta','Ultrassonografia','Exame','Procedimento','Retorno']}; } catch { return {professionals:[],services:['Consulta','Ultrassonografia','Exame','Procedimento','Retorno']}; } }
       let appointments = read(); let selected = new Date(); let view = innerWidth < 600 ? 'day' : 'week'; let editingId = null;
       function persist() { try { localStorage.setItem(KEY, JSON.stringify(appointments)); return true; } catch { return false; } }
       function visibleDays() { if(view === 'day') return [new Date(selected)]; const start = plusDays(selected,-selected.getDay()); return Array.from({length:7},(_,i)=>plusDays(start,i)); }
@@ -89,31 +112,57 @@
             const start=minutes(a.time), finish=start+Number(a.duration);
             if(start>=END || finish<=START)return;
             count++;
-            const event=document.createElement('button');event.type='button';event.className='event '+({Confirmado:'confirmado','Concluído':'concluido',Cancelado:'cancelado'}[a.status]||'');
+            const event=document.createElement('button');event.type='button';event.className='event '+({Confirmado:'confirmado','Concluído':'concluido',Cancelado:'cancelado',Bloqueado:'bloqueado'}[a.status]||'');
             event.style.top=`${Math.max(start,START)*PX_PER_MINUTE-START*PX_PER_MINUTE+2}px`;
             event.style.height=`${Math.max(22,(Math.min(finish,END)-Math.max(start,START))*PX_PER_MINUTE-4)}px`;
             event.title=`${a.patient} • ${a.service} • ${a.status}`;
-            event.innerHTML=`<span>${escapeHTML(a.time)} – ${clock(finish)}</span><strong>${escapeHTML(a.patient)}</strong><span>${escapeHTML(a.service)}</span>`;
+            event.innerHTML=`<span>${escapeHTML(a.time)} – ${clock(finish)}</span><strong>${escapeHTML(a.patient)}</strong><span>${escapeHTML(a.procedure||a.service)}</span>`;
             event.addEventListener('click',()=>openForm(a.id));col.append(event);
           });body.append(col);
         });calendar.append(body);
         $('summaryText').innerHTML=`<strong>${count}</strong> agendamento${count===1?'':'s'} ${view==='day'?'neste dia':'nesta semana'}`;
         $('emptyNote').hidden=count>0;
       }
+      function toggleBlocked(){const blocked=$('blocked').checked;for(const id of ['patientField','serviceField','procedureField','quantityField','phoneField','emailField','insuranceField','statusField','notesField'])$(id).hidden=blocked;$('formTitle').textContent=blocked?(editingId?'Editar bloqueio':'Bloquear horário'):(editingId?'Editar agendamento':'Novo agendamento');}
       function openForm(id=null,date=dateKey(selected),time='08:00') {
         const a=appointments.find(item=>item.id===id);editingId=a?.id||null;
-        $('appointmentForm').reset();$('formError').textContent='';$('formTitle').textContent=a?'Editar agendamento':'Novo agendamento';$('deleteButton').hidden=!a;
-        $('patient').value=a?.patient||'';$('service').value=a?.service||'Consulta';$('professional').value=a?.professional||'';$('date').value=a?.date||date;$('time').value=a?.time||time;$('duration').value=String(a?.duration||30);$('status').value=a?.status||'Agendado';
-        $('appointmentDialog').showModal();$('patient').focus();
+        $('appointmentForm').reset();$('formError').textContent='';$('deleteButton').hidden=!a;
+        const select=$('patient');select.replaceChildren(new Option('Selecione um paciente',''));
+        readPatients().sort((x,y)=>x.name.localeCompare(y.name,'pt-BR')).forEach(p=>select.add(new Option(`${p.name}${p.code?' · '+p.code:''}`,p.id)));
+        if(a && !a.patientId && !a.blocked)select.add(new Option(`${a.patient} (cadastro antigo)`,`legacy:${a.id}`));
+        const config=readConfig(),proSelect=$('professional'),serviceSelect=$('service');
+        proSelect.replaceChildren(new Option('Selecione a agenda',''),...config.professionals.map(p=>new Option(`${p.name}${p.room?' · '+p.room:''}`,p.name)));
+        if(a?.professional && !config.professionals.some(p=>p.name===a.professional))proSelect.add(new Option(`${a.professional} (agenda antiga)`,a.professional));
+        serviceSelect.replaceChildren(...config.services.map(s=>new Option(s,s)));
+        if(a?.service && !config.services.includes(a.service) && !a.blocked)serviceSelect.add(new Option(a.service,a.service));
+        $('blocked').checked=!!a?.blocked;$('patient').value=a?.patientId||(a&&!a.blocked?`legacy:${a.id}`:'');
+        $('service').value=a?.service&&a.service!=='Bloqueio'?a.service:(config.services[0]||'');$('procedure').value=a?.procedure||'';$('quantity').value=a?.quantity||1;$('professional').value=a?.professional||'';
+        $('phone').value=a?.phone||'';$('email').value=a?.email||'';$('insurance').value=a?.insurance||'';$('notes').value=a?.notes||'';
+        $('date').value=a?.date||date;$('time').value=a?.time||time;$('duration').value=String(a?.duration||30);$('status').value=a?.status==='Bloqueado'?'Agendado':(a?.status||'Agendado');
+        $('repeat').value='1';$('repeatField').hidden=!!a;toggleBlocked();$('appointmentDialog').showModal();(a?.blocked?$('date'):$('patient')).focus();
       }
       function closeDialogs(){document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());}
+      $('blocked').addEventListener('change',toggleBlocked);
+      $('patient').addEventListener('change',()=>{const p=readPatients().find(v=>v.id===$('patient').value);if(p){$('phone').value=p.mobile||p.phone||'';$('email').value=p.email||'';$('insurance').value=p.insurance||'Particular';}});
+      $('professional').addEventListener('change',()=>{if(editingId)return;const p=readConfig().professionals.find(v=>v.name===$('professional').value);if(p)$('duration').value=String(p.duration);});
       $('appointmentForm').addEventListener('submit',event=>{
-        event.preventDefault();const patient=$('patient').value.trim(), professional=$('professional').value.trim(), date=$('date').value,time=$('time').value,duration=Number($('duration').value), start=minutes(time);
-        if(!patient || !date || !/^\d\d:\d\d$/.test(time)){ $('formError').textContent='Preencha paciente, data e horário.';return; }
+        event.preventDefault();const blocked=$('blocked').checked, patientId=$('patient').value, record=readPatients().find(p=>p.id===patientId), oldEntry=appointments.find(a=>a.id===editingId);
+        const patient=blocked?'Horário bloqueado':(record?.name||(patientId.startsWith('legacy:')?oldEntry?.patient:''));
+        const professional=$('professional').value.trim(), date=$('date').value,time=$('time').value,duration=Number($('duration').value), start=/^\d\d:\d\d$/.test(time)?minutes(time):NaN;
+        if(!patient && !blocked){$('formError').textContent='Selecione um paciente cadastrado. Use “Cadastrar paciente” para um novo cadastro.';return;}
+        if(!blocked && !$('service').value){$('formError').textContent='Cadastre e selecione um serviço.';return;}
+        const agenda=readConfig().professionals.find(p=>p.name===professional);
+        if(!blocked && !professional){$('formError').textContent='Selecione a agenda de um profissional. Cadastre-a em “Cadastro de agendas”.';return;}
+        if(!date || !Number.isFinite(start)){$('formError').textContent='Preencha a data e o horário.';return;}
         if(start<START || start+duration>END || start%15!==0){$('formError').textContent='Escolha um horário de 15 em 15 minutos, entre 07:00 e 19:00.';return;}
-        if(appointments.some(a=>a.id!==editingId && a.date===date && a.status!=='Cancelado' && $('status').value!=='Cancelado' && start<minutes(a.time)+Number(a.duration) && minutes(a.time)<start+duration)){$('formError').textContent='Este horário coincide com outro agendamento. Escolha um horário livre.';return;}
-        const entry={id:editingId||((globalThis.crypto?.randomUUID?.())||`${Date.now()}-${Math.random()}`),patient,service:$('service').value,professional,date,time,duration,status:$('status').value};
-        const old=appointments.slice();appointments=editingId?appointments.map(a=>a.id===editingId?entry:a):[...appointments,entry];
+        const repeat=editingId?1:Number($('repeat').value), dates=Array.from({length:repeat},(_,i)=>dateKey(plusDays(parseDate(date),i*7)));
+        if(agenda && dates.some(d=>!agenda.days.includes(parseDate(d).getDay())||start<minutes(agenda.start)||start+duration>minutes(agenda.end))){$('formError').textContent='O período escolhido está fora dos dias ou horários cadastrados para este profissional.';return;}
+        const status=blocked?'Bloqueado':$('status').value;
+        if(status!=='Cancelado' && dates.some(d=>appointments.some(a=>a.id!==editingId && a.date===d && a.status!=='Cancelado' && (a.blocked&&!a.professional||blocked&&!professional||a.professional===professional) && start<minutes(a.time)+Number(a.duration) && minutes(a.time)<start+duration))){$('formError').textContent='Há outro agendamento ou bloqueio nesta agenda em uma das datas. Escolha outro período.';return;}
+        const quantity=Number($('quantity').value);if(!blocked && (!Number.isInteger(quantity)||quantity<1||quantity>99)){$('formError').textContent='Informe uma quantidade entre 1 e 99.';return;}
+        const makeId=()=>globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random()}`;
+        const entries=dates.map((d,i)=>({id:i===0&&editingId?editingId:makeId(),patientId:blocked?null:(record?.id||oldEntry?.patientId||null),patient,service:blocked?'Bloqueio':$('service').value,procedure:blocked?'':$('procedure').value.trim(),quantity:blocked?0:quantity,professional,date:d,time,duration,status,blocked,phone:blocked?'':$('phone').value.trim(),email:blocked?'':$('email').value.trim(),insurance:blocked?'':$('insurance').value.trim(),notes:blocked?'':$('notes').value.trim()}));
+        const old=appointments.slice();appointments=editingId?appointments.map(a=>a.id===editingId?entries[0]:a):[...appointments,...entries];
         if(!persist()){appointments=old;$('formError').textContent='Não foi possível salvar neste navegador. Verifique o armazenamento disponível.';return;}
         selected=parseDate(date);closeDialogs();render();
       });
