@@ -3,9 +3,131 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Olá mundo</title>
+  <meta name="theme-color" content="#f7f9fc">
+  <title>Agenda de pacientes | Clínica DM</title>
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#183047;background:#f7f9fc;font-synthesis:none}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+    :focus-visible{outline:3px solid #86b9f5;outline-offset:2px}
+    .shell{max-width:1580px;margin:auto;padding:28px 28px 40px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:28px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:18px;letter-spacing:-.03em;color:#153b66}.brand-mark{width:39px;height:39px;border-radius:11px;background:#146bc5;color:white;display:grid;place-items:center;font-size:23px;box-shadow:0 6px 15px #146bc529}.brand span{font-size:12px;display:block;color:#8293a5;font-weight:500;letter-spacing:0;margin-top:1px}
+    .pill{border:1px solid #dde5ed;border-radius:999px;background:#fff;color:#688094;font-size:12px;padding:8px 12px}
+    h1{font-size:26px;letter-spacing:-.04em;margin:0 0 5px;color:#1265bd}p{margin:0}.subtitle{color:#70879a;font-size:14px}
+    .intro{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:20px}.intro-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{border:1px solid #dbe4ec;border-radius:9px;background:#fff;color:#25425d;min-height:42px;padding:10px 15px;font-weight:650;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;box-shadow:0 1px 2px #17325008}
+    .btn:hover{background:#f1f7fd;border-color:#bdd2e6}.btn.primary{background:#126cc7;border-color:#126cc7;color:white;box-shadow:0 5px 14px #126cc72d}.btn.primary:hover{background:#0758ad}.btn.danger{color:#b6373b;border-color:#f0c7c9}.btn.danger:hover{background:#fff2f2}.btn.icon{width:39px;min-height:39px;padding:0;font-size:19px}.btn.active{background:#eaf4ff;border-color:#9bc4ee;color:#0964bc}
+    .panel{background:#fff;border:1px solid #e0e8ef;border-radius:14px;box-shadow:0 7px 25px #1b3b5910;overflow:hidden}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:19px 21px;border-bottom:1px solid #e8edf2}
+    .toolbar-left,.toolbar-right,.navgroup,.switch{display:flex;align-items:center;gap:8px}.navgroup{gap:3px}.toolbar .date-range{font-weight:750;color:#234967;min-width:180px;text-align:center}
+    .date-jump{width:42px;height:39px;border:1px solid #dbe4ec;border-radius:8px;background:#fff;color:#216bb4;padding:6px;cursor:pointer}
+    .search{position:relative}.search input{width:min(320px,100%);border:1px solid #dbe4ec;border-radius:9px;height:42px;padding:10px 37px 10px 13px;color:#183047;background:#fff}.search input::placeholder{color:#97a6b3}.search span{position:absolute;right:13px;top:11px;color:#8199aa;font-size:18px}
+    .toolbar select{height:42px;max-width:175px;border:1px solid #dbe4ec;background:#fff;border-radius:9px;color:#526e83;padding:0 30px 0 10px}
+    .summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 21px;background:#fbfdff;border-bottom:1px solid #e9eef3;font-size:13px;color:#6e8395}.summary strong{color:#25649d}.legend{display:flex;gap:15px;flex-wrap:wrap}.legend span{display:flex;align-items:center;gap:6px}.dot{height:9px;width:9px;border-radius:50%;display:inline-block;background:#efa22b}.dot.confirmado{background:#248dce}.dot.concluido{background:#48a47c}.dot.cancelado{background:#b0bbc5}
+    .calendar-scroll{overflow:auto;max-height:min(72vh,1080px);scrollbar-color:#c5d4e0 transparent}.calendar{min-width:780px}.calendar.day{min-width:0}
+    .cal-head{display:grid;grid-template-columns:72px repeat(var(--cols),minmax(0,1fr));height:75px;position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #dce5ed}.cal-head .spacer{border-right:1px solid #e9eef3}.day-head{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;color:#567287;font-size:13px;border-right:1px solid #e9eef3}.day-head:last-child{border-right:0}.day-head b{font-size:17px;color:#304f68}.day-head.today{background:#eff7ff;color:#106dc7}.day-head.today b{color:#106dc7}.day-head small{font-size:11px;font-weight:650;text-transform:uppercase;letter-spacing:.05em}
+    .cal-body{display:grid;grid-template-columns:72px repeat(var(--cols),minmax(0,1fr));height:var(--grid-height);position:relative}.time-labels{position:relative;border-right:1px solid #e5ebf1}.time-label{position:absolute;right:12px;transform:translateY(-8px);font-size:11px;color:#8ba0af}.time-label:first-child{transform:translateY(3px)}
+    .day-column{position:relative;border-right:1px solid #e5ebf1;background:repeating-linear-gradient(to bottom,#e6edf2 0,#e6edf2 1px,transparent 1px,transparent 48px)}.day-column.today{background:repeating-linear-gradient(to bottom,#dcebf8 0,#dcebf8 1px,#f5faff 1px,#f5faff 48px)}.day-column:last-child{border-right:0}
+    .slot{position:absolute;left:0;right:0;height:48px;background:transparent;border:0;width:100%;padding:0}.slot:hover{background:#d8ebfa88}.slot:focus-visible{outline:2px solid #69abed;outline-offset:-2px;z-index:1}
+    .event{position:absolute;left:4px;right:4px;border:1px solid #df931f;background:#f7bb50;color:#6b4207;border-radius:7px;padding:5px 7px;overflow:hidden;text-align:left;box-shadow:0 2px 5px #72532212;z-index:2}.event:hover{filter:brightness(.97);box-shadow:0 4px 12px #243d5533}.event strong,.event span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.event strong{font-size:12px;line-height:1.3}.event span{font-size:11px;opacity:.85}.event.confirmado{background:#d9eeff;border-color:#6ab1e7;color:#175a89}.event.concluido{background:#def5e9;border-color:#77cba3;color:#23664b}.event.cancelado{background:#edf0f3;border-color:#b9c4cc;color:#697b89;text-decoration:line-through}
+    .empty-note{margin:12px 20px;color:#8ca0b0;font-size:12px}.mobile-hint{display:none}
+    dialog{border:0;border-radius:15px;padding:0;width:min(530px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;box-shadow:0 24px 70px #102f4e55;color:#183047}dialog::backdrop{background:#102b4680}.modal-header{display:flex;align-items:start;justify-content:space-between;padding:22px 24px 16px;border-bottom:1px solid #e6ecf1}.modal-header h2{font-size:20px;letter-spacing:-.03em;margin:0}.modal-header p{color:#7b8e9f;font-size:13px;margin-top:4px}.close{border:0;background:transparent;color:#71899d;font-size:26px;line-height:1;padding:0 2px}.form-body{padding:21px 24px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:6px;font-size:12px;color:#506b80;font-weight:700}.field.full{grid-column:1/-1}.field input,.field select{height:41px;width:100%;border:1px solid #cddae5;border-radius:8px;background:#fff;color:#17344d;padding:8px 11px;font-weight:400}.field input:focus,.field select:focus{outline:2px solid #b6d9fa;border-color:#3a92df}.form-error{color:#b23a40;font-size:13px;min-height:20px;margin:13px 0 0}.modal-footer{padding:15px 24px 22px;display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}.modal-footer .danger{margin-right:auto}.wait-list{padding:5px 24px 24px;max-height:50vh;overflow:auto}.wait-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e8edf2}.wait-row strong,.wait-row small{display:block}.wait-row small{color:#758b9d;margin-top:3px}.wait-empty{color:#72889a;padding:18px 0}
+    @media(max-width:900px){.shell{padding:18px 13px}.intro{align-items:start;flex-direction:column}.intro-actions{width:100%}.toolbar{padding:13px;align-items:stretch}.toolbar-left,.toolbar-right{flex-wrap:wrap}.toolbar-right{width:100%}.search{flex:1;min-width:180px}.search input{width:100%}.summary{padding:12px 13px}.calendar-scroll{max-height:65vh}}
+    @media(max-width:600px){h1{font-size:23px}.brand{font-size:16px}.pill{display:none}.btn{min-height:39px;padding:8px 11px;font-size:12px}.toolbar .date-range{min-width:138px;font-size:13px}.legend{display:none}.mobile-hint{display:block;font-size:11px;padding:8px 13px;color:#7991a4}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.cal-head{height:62px}.day-head b{font-size:14px}.day-head{font-size:11px}}
+    @media print{.shell{max-width:none;padding:0}.topbar,.intro-actions,.toolbar,.mobile-hint,.empty-note{display:none!important}.panel{border:0;box-shadow:none}.calendar-scroll{overflow:visible;max-height:none}.calendar{min-width:0}.cal-head{position:static}button.slot{display:none}.event{print-color-adjust:exact;-webkit-print-color-adjust:exact}.cal-body{height:var(--grid-height)}}
+  </style>
 </head>
 <body>
-  <h1>ola mundoi</h1>
+  <main class="shell">
+    <header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true">✚</div><div>Clínica DM<span>Agenda de pacientes</span></div></div><span class="pill">Dados salvos neste navegador</span></header>
+    <section class="intro"><div><h1>Agendamentos de pacientes</h1><p class="subtitle">Organize consultas e exames em uma só agenda.</p></div><div class="intro-actions"><button class="btn" id="waitButton" type="button">◷ &nbsp;Aguardando confirmação</button><button class="btn" id="printButton" type="button">▤ &nbsp;Imprimir agenda</button><button class="btn primary" id="newButton" type="button">＋ &nbsp;Novo agendamento</button></div></section>
+    <section class="panel" aria-label="Calendário de agendamentos">
+      <div class="toolbar"><div class="toolbar-left"><div class="navgroup"><button class="btn icon" id="previous" type="button" aria-label="Período anterior">‹</button><button class="btn" id="today" type="button">Hoje</button><button class="btn icon" id="next" type="button" aria-label="Próximo período">›</button></div><span class="date-range" id="dateRange"></span><input class="date-jump" id="dateJump" type="date" aria-label="Ir para uma data" title="Ir para uma data"><div class="switch"><button class="btn" id="dayView" type="button">Dia</button><button class="btn" id="weekView" type="button">Semana</button></div></div><div class="toolbar-right"><label class="search"><input id="search" type="search" autocomplete="off" placeholder="Busque um paciente" aria-label="Buscar paciente"><span aria-hidden="true">⌕</span></label><select id="statusFilter" aria-label="Filtrar por situação"><option value="">Todas as situações</option><option value="Agendado">Agendado</option><option value="Confirmado">Confirmado</option><option value="Concluído">Concluído</option><option value="Cancelado">Cancelado</option></select></div></div>
+      <div class="summary"><span id="summaryText"></span><div class="legend" aria-hidden="true"><span><i class="dot"></i>Agendado</span><span><i class="dot confirmado"></i>Confirmado</span><span><i class="dot concluido"></i>Concluído</span><span><i class="dot cancelado"></i>Cancelado</span></div></div>
+      <div class="mobile-hint">Deslize a agenda para os lados para ver outros dias.</div><div class="calendar-scroll"><div class="calendar" id="calendar"></div></div><p class="empty-note" id="emptyNote">Clique em um horário livre ou em “Novo agendamento” para começar.</p>
+    </section>
+  </main>
+
+  <dialog id="appointmentDialog" aria-labelledby="formTitle"><form id="appointmentForm" novalidate><div class="modal-header"><div><h2 id="formTitle">Novo agendamento</h2><p>Preencha os dados do atendimento.</p></div><button class="close" type="button" data-close aria-label="Fechar">×</button></div><div class="form-body"><div class="fields"><label class="field full">Nome do paciente <input id="patient" name="patient" required maxlength="100" autocomplete="off" placeholder="Nome completo"></label><label class="field">Atendimento <select id="service" name="service" required><option value="Consulta">Consulta</option><option value="Ultrassonografia">Ultrassonografia</option><option value="Exame">Exame</option><option value="Procedimento">Procedimento</option></select></label><label class="field">Profissional <input id="professional" name="professional" maxlength="80" placeholder="Nome do profissional"></label><label class="field">Data <input id="date" name="date" type="date" required></label><label class="field">Horário <input id="time" name="time" type="time" min="07:00" max="18:45" step="900" required></label><label class="field">Duração <select id="duration" name="duration"><option value="15">15 minutos</option><option value="30" selected>30 minutos</option><option value="45">45 minutos</option><option value="60">1 hora</option><option value="90">1 hora e 30 minutos</option><option value="120">2 horas</option></select></label><label class="field">Situação <select id="status" name="status"><option>Agendado</option><option>Confirmado</option><option>Concluído</option><option>Cancelado</option></select></label></div><p id="formError" class="form-error" role="alert"></p></div><div class="modal-footer"><button class="btn danger" id="deleteButton" type="button" hidden>Excluir</button><button class="btn" type="button" data-close>Voltar</button><button class="btn primary" type="submit">Salvar agendamento</button></div></form></dialog>
+  <dialog id="waitDialog" aria-labelledby="waitTitle"><div class="modal-header"><div><h2 id="waitTitle">Aguardando confirmação</h2><p>Agendamentos pendentes de confirmação.</p></div><button class="close" type="button" data-close aria-label="Fechar">×</button></div><div id="waitList" class="wait-list"></div><div class="modal-footer"><button class="btn" type="button" data-close>Fechar</button></div></dialog>
+  <script>
+    (() => {
+      'use strict';
+      const KEY = 'clinica-dm-agendamentos-v1';
+      const START = 7 * 60, END = 19 * 60, PX_PER_MINUTE = 1.6;
+      const $ = id => document.getElementById(id);
+      const fmtDay = new Intl.DateTimeFormat('pt-BR', {weekday:'long'});
+      const fmtMonth = new Intl.DateTimeFormat('pt-BR', {month:'long'});
+      const fmtShort = new Intl.DateTimeFormat('pt-BR', {day:'2-digit',month:'short'});
+      const dateKey = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      const parseDate = key => { const [y,m,d] = key.split('-').map(Number); return new Date(y,m-1,d); };
+      const plusDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+      const minutes = time => {const [h,m] = time.split(':').map(Number); return h*60+m;};
+      const clock = n => `${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`;
+      const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      function read() { try { const value = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(value) ? value.filter(a => a && a.id && a.date && a.time && a.patient) : []; } catch { return []; } }
+      let appointments = read(); let selected = new Date(); let view = innerWidth < 600 ? 'day' : 'week'; let editingId = null;
+      function persist() { try { localStorage.setItem(KEY, JSON.stringify(appointments)); return true; } catch { return false; } }
+      function visibleDays() { if(view === 'day') return [new Date(selected)]; const start = plusDays(selected,-selected.getDay()); return Array.from({length:7},(_,i)=>plusDays(start,i)); }
+      function matches(a) { const term = $('search').value.trim().toLocaleLowerCase('pt-BR'); return (!term || `${a.patient} ${a.service} ${a.professional||''}`.toLocaleLowerCase('pt-BR').includes(term)) && (!$('statusFilter').value || a.status === $('statusFilter').value); }
+      function render() {
+        const days = visibleDays(), first = days[0], last = days.at(-1), today = dateKey(new Date());
+        $('dateRange').textContent = view === 'day' ? `${first.getDate()} de ${fmtMonth.format(first)} de ${first.getFullYear()}` : `${fmtShort.format(first)} – ${fmtShort.format(last)} de ${last.getFullYear()}`;
+        $('dateJump').value = dateKey(selected);
+        $('dayView').classList.toggle('active',view==='day'); $('weekView').classList.toggle('active',view==='week');
+        $('dayView').setAttribute('aria-pressed',view==='day'); $('weekView').setAttribute('aria-pressed',view==='week');
+        const calendar = $('calendar'); calendar.className = `calendar ${view}`; calendar.style.setProperty('--cols',days.length); calendar.style.setProperty('--grid-height',`${(END-START)*PX_PER_MINUTE}px`);
+        calendar.replaceChildren();
+        const head = document.createElement('div'); head.className='cal-head'; const spacer=document.createElement('div');spacer.className='spacer';head.append(spacer);
+        days.forEach(day => {const el=document.createElement('div');el.className='day-head'+(dateKey(day)===today?' today':''); el.innerHTML=`<small>${escapeHTML(fmtDay.format(day))}</small><b>${day.getDate()} ${escapeHTML(fmtMonth.format(day))}</b>`;head.append(el);});calendar.append(head);
+        const body=document.createElement('div');body.className='cal-body';const labels=document.createElement('div');labels.className='time-labels';
+        for(let t=START;t<END;t+=30){const label=document.createElement('span');label.className='time-label';label.style.top=`${(t-START)*PX_PER_MINUTE}px`;label.textContent=clock(t);labels.append(label);}body.append(labels);
+        let count=0;
+        days.forEach(day => {
+          const key=dateKey(day), col=document.createElement('div');col.className='day-column'+(key===today?' today':'');
+          for(let t=START;t<END;t+=30){const slot=document.createElement('button');slot.type='button';slot.className='slot';slot.style.top=`${(t-START)*PX_PER_MINUTE}px`;slot.setAttribute('aria-label',`Novo agendamento em ${day.toLocaleDateString('pt-BR')} às ${clock(t)}`);slot.addEventListener('click',()=>openForm(null,key,clock(t)));col.append(slot);}
+          appointments.filter(a=>a.date===key && matches(a)).sort((a,b)=>a.time.localeCompare(b.time)).forEach(a=>{
+            const start=minutes(a.time), finish=start+Number(a.duration);
+            if(start>=END || finish<=START)return;
+            count++;
+            const event=document.createElement('button');event.type='button';event.className='event '+({Confirmado:'confirmado','Concluído':'concluido',Cancelado:'cancelado'}[a.status]||'');
+            event.style.top=`${Math.max(start,START)*PX_PER_MINUTE-START*PX_PER_MINUTE+2}px`;
+            event.style.height=`${Math.max(22,(Math.min(finish,END)-Math.max(start,START))*PX_PER_MINUTE-4)}px`;
+            event.title=`${a.patient} • ${a.service} • ${a.status}`;
+            event.innerHTML=`<span>${escapeHTML(a.time)} – ${clock(finish)}</span><strong>${escapeHTML(a.patient)}</strong><span>${escapeHTML(a.service)}</span>`;
+            event.addEventListener('click',()=>openForm(a.id));col.append(event);
+          });body.append(col);
+        });calendar.append(body);
+        $('summaryText').innerHTML=`<strong>${count}</strong> agendamento${count===1?'':'s'} ${view==='day'?'neste dia':'nesta semana'}`;
+        $('emptyNote').hidden=count>0;
+      }
+      function openForm(id=null,date=dateKey(selected),time='08:00') {
+        const a=appointments.find(item=>item.id===id);editingId=a?.id||null;
+        $('appointmentForm').reset();$('formError').textContent='';$('formTitle').textContent=a?'Editar agendamento':'Novo agendamento';$('deleteButton').hidden=!a;
+        $('patient').value=a?.patient||'';$('service').value=a?.service||'Consulta';$('professional').value=a?.professional||'';$('date').value=a?.date||date;$('time').value=a?.time||time;$('duration').value=String(a?.duration||30);$('status').value=a?.status||'Agendado';
+        $('appointmentDialog').showModal();$('patient').focus();
+      }
+      function closeDialogs(){document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());}
+      $('appointmentForm').addEventListener('submit',event=>{
+        event.preventDefault();const patient=$('patient').value.trim(), professional=$('professional').value.trim(), date=$('date').value,time=$('time').value,duration=Number($('duration').value), start=minutes(time);
+        if(!patient || !date || !/^\d\d:\d\d$/.test(time)){ $('formError').textContent='Preencha paciente, data e horário.';return; }
+        if(start<START || start+duration>END || start%15!==0){$('formError').textContent='Escolha um horário de 15 em 15 minutos, entre 07:00 e 19:00.';return;}
+        if(appointments.some(a=>a.id!==editingId && a.date===date && a.status!=='Cancelado' && $('status').value!=='Cancelado' && start<minutes(a.time)+Number(a.duration) && minutes(a.time)<start+duration)){$('formError').textContent='Este horário coincide com outro agendamento. Escolha um horário livre.';return;}
+        const entry={id:editingId||((globalThis.crypto?.randomUUID?.())||`${Date.now()}-${Math.random()}`),patient,service:$('service').value,professional,date,time,duration,status:$('status').value};
+        const old=appointments.slice();appointments=editingId?appointments.map(a=>a.id===editingId?entry:a):[...appointments,entry];
+        if(!persist()){appointments=old;$('formError').textContent='Não foi possível salvar neste navegador. Verifique o armazenamento disponível.';return;}
+        selected=parseDate(date);closeDialogs();render();
+      });
+      $('deleteButton').addEventListener('click',()=>{if(!editingId || !confirm('Excluir este agendamento?'))return;const old=appointments.slice();appointments=appointments.filter(a=>a.id!==editingId);if(!persist()){appointments=old;$('formError').textContent='Não foi possível excluir neste navegador.';return;}closeDialogs();render();});
+      document.querySelectorAll('[data-close]').forEach(btn=>btn.addEventListener('click',closeDialogs));
+      $('appointmentDialog').addEventListener('click',e=>{if(e.target===$('appointmentDialog'))closeDialogs();});$('waitDialog').addEventListener('click',e=>{if(e.target===$('waitDialog'))closeDialogs();});
+      $('newButton').addEventListener('click',()=>openForm());$('printButton').addEventListener('click',()=>window.print());
+      $('waitButton').addEventListener('click',()=>{const list=$('waitList');list.replaceChildren();const pending=appointments.filter(a=>a.status==='Agendado' && a.date>=dateKey(new Date())).sort((a,b)=>`${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));if(!pending.length){list.innerHTML='<p class="wait-empty">Nenhum agendamento aguardando confirmação.</p>';}else pending.forEach(a=>{const row=document.createElement('div');row.className='wait-row';row.innerHTML=`<div><strong>${escapeHTML(a.patient)}</strong><small>${parseDate(a.date).toLocaleDateString('pt-BR')} às ${escapeHTML(a.time)} · ${escapeHTML(a.service)}</small></div>`;const btn=document.createElement('button');btn.className='btn';btn.type='button';btn.textContent='Abrir';btn.addEventListener('click',()=>{closeDialogs();openForm(a.id);});row.append(btn);list.append(row);});$('waitDialog').showModal();});
+      $('previous').addEventListener('click',()=>{selected=plusDays(selected,view==='week'?-7:-1);render();});$('next').addEventListener('click',()=>{selected=plusDays(selected,view==='week'?7:1);render();});$('today').addEventListener('click',()=>{selected=new Date();render();});
+      $('dateJump').addEventListener('change',e=>{if(e.target.value){selected=parseDate(e.target.value);render();}});
+      $('dayView').addEventListener('click',()=>{view='day';render();});$('weekView').addEventListener('click',()=>{view='week';render();});
+      $('search').addEventListener('input',render);$('statusFilter').addEventListener('change',render);
+      render();
+    })();
+  </script>
 </body>
 </html>
