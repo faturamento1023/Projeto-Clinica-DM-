@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f9fc">
+<title>Agendamento rápido | Clínica DM</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#1b344c;background:#f6f9fc}
+*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}
+:focus-visible{outline:3px solid #7bb5ee;outline-offset:2px}
+.shell{max-width:1580px;margin:auto;padding:24px 25px 44px}
+.topbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.brand{display:flex;align-items:center;gap:11px;color:#153b66;font-weight:800;font-size:18px}
+.mark{display:grid;place-items:center;width:39px;height:39px;border-radius:11px;background:#126cc7;color:#fff;font-size:24px}
+.nav{display:flex;flex-wrap:wrap;gap:5px;margin-left:16px}
+.nav a{padding:9px 12px;border-radius:8px;color:#456981;text-decoration:none;font-weight:650;font-size:14px}
+.nav a.active,.nav a:hover{background:#e7f2ff;color:#1266bb}
+.pill{margin-left:auto;font-size:12px;border-radius:20px;padding:8px 11px;color:#6a8598;background:#fff;border:1px solid #e0e8ee}
+.heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:14px;flex-wrap:wrap}
+h1{margin:0 0 5px;font-size:29px;color:#1164b9;letter-spacing:-.04em}p{margin:0}.muted{color:#728a9c;font-size:13px}
+.btn{border:1px solid #d6e2ec;border-radius:9px;background:#fff;color:#294861;padding:10px 14px;min-height:42px;font-weight:650}
+.btn:hover{background:#eff7ff}.btn.primary{border-color:#126cc7;background:#126cc7;color:#fff}.btn.primary:hover{background:#095eaf}
+.btn.danger{color:#b8414a;border-color:#f2ced0}.btn.danger:hover{background:#fff1f2}
+.btn.small{padding:6px 10px;min-height:31px;font-size:12px}
+.notice{border:1px solid #ecdfb8;background:#fffaf0;color:#866527;border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.5;margin-bottom:18px}
+.layout{display:grid;grid-template-columns:236px minmax(340px,1fr) 340px;gap:17px;align-items:start}
+.card{border:1px solid #e0e9f0;background:white;border-radius:14px;box-shadow:0 6px 22px #15364c0b;min-width:0;overflow:hidden}
+.card-head{padding:18px 19px;border-bottom:1px solid #ebf0f4}.card-head h2{font-size:17px;margin:0;color:#214762}.card-head p{font-size:12px;color:#8295a5;margin-top:5px}
+.dates{padding:8px;display:grid;gap:5px;max-height:670px;overflow:auto}
+.date-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:1px solid transparent;border-radius:9px;background:#fff;padding:12px 10px;color:#37536b;width:100%}
+.date-btn:hover{background:#f3f8fc}.date-btn.active{background:#eaf4ff;border-color:#a9d3f6;color:#125eb2}
+.date-btn strong,.date-btn small{display:block}.date-btn strong{font-size:14px}.date-btn small{color:#7891a3;font-size:11px;margin-top:3px}
+.counter{font-size:11px;font-weight:750;color:#46738c;white-space:nowrap}
+.stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.stat{border:1px solid #e3ebf2;background:#fafcfe;padding:9px 11px;border-radius:9px;font-size:12px;color:#557084}
+.stat strong{font-size:18px;color:#126bc0;margin-right:5px}
+.slot-wrap{padding:19px}
+.group{margin:0 0 20px}.group:last-child{margin-bottom:0}
+.group-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 11px}
+.group-head h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:#6b8699;margin:0}
+.group-head small{font-size:12px;color:#8093a3}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:9px}
+.slot{min-height:78px;text-align:left;border:1px solid #cfe5d6;background:#f0faf4;color:#276347;padding:11px 12px;border-radius:10px;transition:background .15s,border .15s}
+.slot:hover{border-color:#75c19a;background:#e1f6e9}
+.slot.selected{outline:2px solid #126cc7;outline-offset:1px;border-color:#126cc7}
+.slot.occupied{background:#fff4e4;border-color:#f3d5a9;color:#86551c}.slot.occupied:hover{background:#ffefd5}
+.slot.blocked{background:#edf0f2;border-color:#d2d9de;color:#586b7c}
+.slot strong{display:block;font-size:17px}.slot span{display:block;font-size:11px;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty{color:#8297a8;font-size:13px;padding:14px 0}
+.form-card{position:sticky;top:12px}
+.form-body{padding:19px}.chosen{background:#edf6ff;border:1px solid #cae3fb;border-radius:9px;color:#285e8b;font-weight:750;font-size:14px;padding:12px;margin-bottom:16px;min-height:46px}
+label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 0 13px}
+.field input,.field select,.field textarea{display:block;width:100%;border:1px solid #d2dfe9;border-radius:8px;background:#fff;color:#17354e;padding:10px 11px;font-size:14px;font-weight:400;margin-top:7px}
+.field input,.field select{min-height:43px}.field textarea{resize:vertical;min-height:67px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.form-actions .primary{flex:1}
+.message{font-size:12px;margin:13px 0 0;line-height:1.4;min-height:18px}.message.error{color:#b33a42}.message.ok{color:#177049}
+.list-card{margin-top:16px}.list{padding:5px 16px 15px}
+.visit{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px solid #eef1f4}
+.visit:last-child{border-bottom:0}.visit-main{min-width:0}.visit-time{display:inline-block;min-width:52px;font-size:13px;color:#176ab7;font-weight:800}
+.visit-main strong{font-size:13px}.visit-main small{font-size:11px;color:#71899d;display:block;margin:5px 0 0 54px}
+.visit.cancelled{opacity:.55}
+.visit-actions{display:flex;gap:6px}.visit-actions button{white-space:nowrap}
+.note{color:#8196a8;font-size:12px;padding:16px 0}
+@media(max-width:1200px){.layout{grid-template-columns:220px minmax(0,1fr)}.form-card{grid-column:2;position:static}.dates{max-height:525px}}
+@media(max-width:760px){.shell{padding:17px 12px}.topbar{margin-bottom:19px}.nav{margin:0;order:3;width:100%}.pill{display:none}.layout{grid-template-columns:1fr}.form-card{grid-column:auto}.dates{display:flex;overflow-x:auto;max-height:none}.date-btn{min-width:145px}.slot-wrap{padding:13px}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.slot{min-height:67px}.heading{align-items:start}h1{font-size:24px}}
+@media print{body{background:#fff}.topbar,.notice,.heading button,.dates-card,.form-card,.slots,.group-head,.stats,.visit-actions{display:none!important}.shell{padding:0;max-width:none}.layout{display:block}.card{box-shadow:none;border:0}.card-head{padding:12px 0}.slot-wrap{display:none}.list-card{margin-top:0}.list{padding:0}.visit{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="topbar">
+  <div class="brand"><span class="mark" aria-hidden="true">✚</span>Clínica DM · Recepção</div>
+  <nav class="nav" aria-label="Menu principal">
+    <a href="index.html">Calendário</a>
+    <a class="active" href="agendar.html" aria-current="page">Agendamento rápido</a>
+    <a href="patients.html">Pacientes</a>
+    <a href="schedules.html">Cadastro de agendas</a>
+    <a href="queue.html">Senhas</a>
+  </nav>
+  <span class="pill">Novembro de 2026 · Dr. Diego</span>
+</header>
+<section class="heading">
+  <div><h1>Agendamento rápido</h1><p class="muted">Dr. Diego Mendoza Gouveia · Escolha o dia, clique em um horário e preencha o paciente.</p></div>
+  <div><button class="btn" id="nextFree" type="button">Próximo horário livre</button> <button class="btn" id="print" type="button">Imprimir o dia</button></div>
+</section>
+<div class="notice"><strong>Protótipo de demonstração.</strong> Agendamentos ficam somente neste navegador, sem login, banco compartilhado ou sincronização com Google Drive. Não insira dados reais de pacientes até haver uma versão segura.</div>
+<div class="layout">
+  <aside class="card dates-card"><div class="card-head"><h2>1. Escolha o dia</h2><p>16 datas disponíveis</p></div><div class="dates" id="dates" aria-label="Datas da agenda"></div></aside>
+  <section>
+    <div class="card">
+      <div class="card-head"><h2 id="dayTitle">Horários</h2><p id="daySub">Selecione um dia para visualizar os horários.</p>
+        <div class="stats"><div class="stat"><strong id="freeCount">0</strong> livres</div><div class="stat"><strong id="occupiedCount">0</strong> ocupados</div><div class="stat"><strong id="totalCount">0</strong> vagas</div></div>
+      </div>
+      <div class="slot-wrap" id="slotWrap"></div>
+    </div>
+    <div class="card list-card">
+      <div class="card-head"><h2>Agendamentos do dia</h2><p>Confira, edite ou cancele um agendamento.</p></div>
+      <div class="list" id="dayList"></div>
+    </div>
+  </section>
+  <aside class="card form-card">
+    <div class="card-head"><h2 id="formHeading">3. Dados do paciente</h2><p>Preenchimento em poucos campos.</p></div>
+    <form class="form-body" id="bookingForm" autocomplete="off">
+      <div class="chosen" id="chosen">2. Selecione um horário livre</div>
+      <label class="field">Nome do paciente *<input id="patient" list="suggestions" maxlength="100" required placeholder="Nome completo"></label>
+      <datalist id="suggestions"></datalist>
+      <label class="field">Procedimento *<input id="procedure" list="procedures" maxlength="120" required placeholder="Ex.: USG de abdome total"></label>
+      <datalist id="procedures"><option value="USG de abdome total"><option value="USG transvaginal"><option value="USG obstétrica"><option value="USG de tireoide"><option value="USG de vias urinárias"><option value="USG de mama"><option value="Consulta clínica"><option value="Consulta ortopédica"><option value="ECG"><option value="Holter"><option value="MAPA"></datalist>
+      <div class="row2">
+        <label class="field">Tipo de atendimento<select id="service"><option>Ultrassonografia</option><option>Consulta</option><option>Procedimento</option><option>Exame</option><option>Retorno</option></select></label>
+        <label class="field">Situação<select id="status"><option>Agendado</option><option>Confirmado</option><option>Concluído</option><option>Cancelado</option></select></label>
+      </div>
+      <label class="field">Observação (opcional)<textarea id="notes" rows="2" maxlength="350" placeholder="Informação interna de agendamento"></textarea></label>
+      <div class="form-actions">
+        <button class="btn primary" type="submit" id="save">Salvar agendamento</button>
+        <button class="btn" type="button" id="clear">Limpar</button>
+        <button class="btn danger" type="button" id="cancel" hidden>Cancelar</button>
+      </div>
+      <p class="message" id="message" role="status" aria-live="polite"></p>
+    </form>
+  </aside>
+</div>
+</main>
+<script>
+(function () {
+  'use strict';
+  const KEY = 'clinica-dm-agendamentos-v1';
+  const PATIENT_KEY = 'clinica-dm-pacientes-v1';
+  const DOCTOR = 'Dr. Diego Mendoza Gouveia';
+  const YEAR = 2026, MONTH = '11';
+  const SCHEDULE = [
+    [2, 'Segunda-feira', [['08:00','12:00'],['13:30','19:00']]],
+    [3, 'Terça-feira', [['08:00','12:00']]],
+    [4, 'Quarta-feira', ['14:00']],
+    [9, 'Segunda-feira', ['14:30']],
+    [10, 'Terça-feira', [['08:00','12:00'],['13:30','19:00']]],
+    [11, 'Quarta-feira', ['17:00']],
+    [12, 'Quinta-feira', ['17:00']],
+    [13, 'Sexta-feira', [['13:30','19:00']]],
+    [16, 'Segunda-feira', ['17:00']],
+    [18, 'Quarta-feira', [['08:00','12:00'],['13:30','19:00']]],
+    [19, 'Quinta-feira', ['17:00']],
+    [20, 'Sexta-feira', [['13:30','19:00']]],
+    [23, 'Segunda-feira', ['17:00']],
+    [24, 'Terça-feira', [['08:00','12:00'],['13:30','19:00']]],
+    [26, 'Quinta-feira', ['08:00','17:00']],
+    [27, 'Sexta-feira', [['13:30','19:00']]]
+  ];
+  const $ = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2,'0');
+  const key = d => YEAR + '-' + MONTH + '-' + pad(d);
+  const mins = t => Number(t.split(':')[0]) * 60 + Number(t.split(':')[1]);
+  const clock = m => pad(Math.floor(m/60)) + ':' + pad(m%60);
+  const slotsFor = segments => segments.flatMap(s => Array.isArray(s)
+    ? Array.from({length: Math.max(0,(mins(s[1])-mins(s[0]))/30)}, (_,i)=>clock(mins(s[0])+i*30))
+    : [s]);
+  const DATES = SCHEDULE.map(([d,weekday,segments]) => ({day:d,weekday,date:key(d),times:slotsFor(segments)}));
+  function read(keyName) {
+    try { const value=JSON.parse(localStorage.getItem(keyName)||'[]'); return Array.isArray(value)?value:[]; }
+    catch { return []; }
+  }
+  function normalize(v) { return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase().replace(/\s+/g,' '); }
+  function relevant(a) { return a && (normalize(a.professional).includes('diego') || (!a.professional && a.blocked)); }
+  function active(a) { return a.status !== 'Cancelado'; }
+  function overlap(a,time) { const s=mins(a.time),t=mins(time); return t<s+Number(a.duration||30) && s<t+30; }
+  let appointments=read(KEY);
+  let selected = (DATES.find(d=>d.date>=new Date().toLocaleDateString('sv-SE'))||DATES[0]).date;
+  let selectedTime = '', editingId=null;
+  function belongs(a,d) { return a && a.date===d && relevant(a); }
+  function conflicts(date,time,id) {
+    return appointments.filter(a=>belongs(a,date)&&active(a)&&a.id!==id&&overlap(a,time));
+  }
+  function occupants(date,time) { return conflicts(date,time,null); }
+  function availability(day) {
+    const busy=day.times.filter(t=>occupants(day.date,t).length).length;
+    return {busy,free:day.times.length-busy};
+  }
+  function element(tag,cls,text) {
+    const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;
+  }
+  function message(value,kind) { const p=$('message');p.textContent=value;p.className='message '+(kind||''); }
+  function saveAll(next) {
+    try { localStorage.setItem(KEY,JSON.stringify(next));appointments=next;return true; }
+    catch { message('Não foi possível salvar neste navegador.','error');return false; }
+  }
+  function byId(id) { return appointments.find(a=>a.id===id); }
+  function dayData() { return DATES.find(d=>d.date===selected) || DATES[0]; }
+  function refreshPatients() {
+    const patientNames=read(PATIENT_KEY).map(x=>x.name).filter(Boolean).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+    $('suggestions').replaceChildren(...patientNames.map(name=>element('option','',name)));
+  }
+  function selectDate(date) {
+    if(!DATES.some(d=>d.date===date))return;
+    selected=date;editingId=null;selectedTime='';$('bookingForm').reset();$('cancel').hidden=true;
+    message('');render();
+  }
+  function choose(time,id) {
+    const d=dayData();
+    if(!d.times.includes(time))return;
+    selectedTime=time;editingId=id||null;
+    $('bookingForm').reset();
+    const a=id?byId(id):null;
+    $('patient').value=a?.patient||'';
+    $('procedure').value=a?.procedure||a?.service||'';
+    $('service').value=a?.service||'Ultrassonografia';
+    $('status').value=a?.status||'Agendado';
+    $('notes').value=a?.notes||'';
+    $('cancel').hidden=!a||a.status==='Cancelado';
+    message('');
+    render();
+    $('patient').focus();
+  }
+  function renderDates() {
+    const root=$('dates');root.replaceChildren();
+    DATES.forEach(d=>{
+      const n=availability(d);
+      const btn=element('button','date-btn'+(selected===d.date?' active':''));
+      btn.type='button';btn.setAttribute('aria-pressed',selected===d.date);
+      const info=element('span');info.append(element('strong','',pad(d.day)+'/11 · '+d.weekday.split('-')[0]),element('small','',n.free+' livres de '+d.times.length));
+      btn.append(info,element('span','counter',n.busy+'/'+d.times.length));
+      btn.addEventListener('click',()=>selectDate(d.date));
+      root.append(btn);
+    });
+  }
+  function renderSlots() {
+    const d=dayData(),counts=availability(d);
+    $('dayTitle').textContent=pad(d.day)+'/11/2026 · '+d.weekday;
+    $('daySub').textContent='2. Clique em um horário verde para agendar. Clique em um ocupado para editar.';
+    $('freeCount').textContent=counts.free;
+    $('occupiedCount').textContent=counts.busy;
+    $('totalCount').textContent=d.times.length;
+    const wrap=$('slotWrap');wrap.replaceChildren();
+    const groups=[
+      {title:'Manhã',times:d.times.filter(t=>mins(t)<12*60)},
+      {title:'Tarde / noite',times:d.times.filter(t=>mins(t)>=12*60)}
+    ];
+    groups.filter(g=>g.times.length).forEach(g=>{
+      const section=element('section','group'),top=element('div','group-head');
+      top.append(element('h3','',g.title),element('small','',g.times.length+' horário(s)'));
+      const grid=element('div','slots');
+      g.times.forEach(time=>{
+        const match=occupants(d.date,time)[0];
+        const isEditing=editingId&&byId(editingId)?.date===d.date&&selectedTime===time;
+        const row=match||(isEditing?byId(editingId):null);
+        const blocked=row?.blocked===true;
+        const btn=element('button','slot '+(row?(blocked?'blocked':'occupied'):'')+(selectedTime===time?' selected':''));
+        btn.type='button';btn.setAttribute('aria-pressed',selectedTime===time);
+        const label=row?(blocked?'Bloqueado':row.patient):'Livre';
+        btn.setAttribute('aria-label',time+' · '+label);
+        btn.append(element('strong','',time),element('span','',label));
+        btn.addEventListener('click',()=>{
+          if(row?.blocked){message('Este período está bloqueado no calendário principal.','error');return;}
+          choose(time,row?.id||null);
+        });
+        grid.append(btn);
+      });
+      section.append(top,grid);wrap.append(section);
+    });
+  }
+  function renderList() {
+    const root=$('dayList');root.replaceChildren();
+    const d=dayData();
+    const items=appointments.filter(a=>belongs(a,d.date)&&!a.blocked)
+      .sort((a,b)=>a.time.localeCompare(b.time)||(a.patient||'').localeCompare(b.patient||''));
+    if(!items.length){root.append(element('p','note','Nenhum agendamento cadastrado para este dia.'));return;}
+    items.forEach(a=>{
+      const line=element('div','visit'+(a.status==='Cancelado'?' cancelled':''));
+      const info=element('div','visit-main');const t=element('span','visit-time',a.time);
+      const name=element('strong','',a.patient);
+      const small=element('small','',(a.procedure||a.service)+' · '+a.status);
+      info.append(t,name,small);
+      const actions=element('div','visit-actions');
+      const edit=element('button','btn small','Editar');edit.type='button';
+      edit.addEventListener('click',()=>{
+        if(!d.times.includes(a.time)){message('O horário não está na grade de novembro. Edite pelo calendário principal.','error');return;}
+        choose(a.time,a.id);
+      });
+      actions.append(edit);line.append(info,actions);root.append(line);
+    });
+  }
+  function renderForm() {
+    const d=dayData();
+    $('chosen').textContent=selectedTime
+      ? '✓ '+pad(d.day)+'/11/2026 às '+selectedTime
+      : '2. Selecione um horário livre';
+    $('formHeading').textContent=editingId?'Editar agendamento':'3. Dados do paciente';
+    $('save').textContent=editingId?'Salvar alterações':'Salvar agendamento';
+    $('save').disabled=!selectedTime;
+  }
+  function render() {appointments=read(KEY);renderDates();renderSlots();renderList();renderForm();}
+  $('bookingForm').addEventListener('submit',ev=>{
+    ev.preventDefault();
+    const d=dayData(),time=selectedTime,patient=$('patient').value.trim().replace(/\s+/g,' '),procedure=$('procedure').value.trim(),service=$('service').value,status=$('status').value,notes=$('notes').value.trim();
+    if(!d.times.includes(time)){message('Primeiro escolha um horário disponível.','error');return;}
+    if(patient.length<2||!procedure){message('Informe o nome e o procedimento.','error');return;}
+    appointments=read(KEY);
+    const c=conflicts(d.date,time,editingId);
+    if(status!=='Cancelado'&&c.length){message('Este horário já está ocupado. Escolha outro.','error');render();return;}
+    if(status==='Cancelado'&&!editingId){message('Para cancelar, selecione primeiro um agendamento existente.','error');return;}
+    const existing=editingId?byId(editingId):null;
+    const match=read(PATIENT_KEY).find(p=>normalize(p.name)===normalize(patient));
+    const next={...(existing||{}),id:existing?.id||(globalThis.crypto?.randomUUID?.()||String(Date.now())+'-'+String(Math.random()).slice(2)),date:d.date,time,
+      patient,patientId:match?.id||existing?.patientId||null,service,procedure,professional:DOCTOR,
+      status,duration:existing?.duration||30,quantity:existing?.quantity||1,blocked:false,notes};
+    const updated=existing?appointments.map(a=>a.id===existing.id?next:a):[...appointments,next];
+    if(saveAll(updated)){const edit=!!existing;editingId=next.id;message(edit?'Agendamento atualizado.':'Agendamento salvo com sucesso.','ok');render();}
+  });
+  $('clear').addEventListener('click',()=>{
+    const time=selectedTime;choose(time,null);
+    if(!time){$('bookingForm').reset();message('');render();}
+  });
+  $('cancel').addEventListener('click',()=>{
+    if(!editingId)return;const old=byId(editingId);if(!old)return;
+    if(!confirm('Cancelar o agendamento de '+old.patient+' às '+old.time+'?'))return;
+    const updated=appointments.map(a=>a.id===editingId?{...a,status:'Cancelado'}:a);
+    if(saveAll(updated)){editingId=null;selectedTime='';$('bookingForm').reset();message('Agendamento cancelado. O horário voltou a ficar livre.','ok');render();}
+  });
+  $('nextFree').addEventListener('click',()=>{
+    for(const d of DATES){const free=d.times.find(t=>!occupants(d.date,t).length);if(free){selected=d.date;choose(free,null);return;}}
+    message('Não existem horários livres na agenda.','error');
+  });
+  $('print').addEventListener('click',()=>window.print());
+  window.addEventListener('storage',e=>{if(e.key===KEY||e.key===PATIENT_KEY){refreshPatients();render();}});
+  refreshPatients();render();
+})();
+</script>
+</body>
+</html>
