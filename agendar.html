@@ -67,6 +67,29 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
 @media(max-width:1200px){.layout{grid-template-columns:220px minmax(0,1fr)}.form-card{grid-column:2;position:static}.dates{max-height:525px}}
 @media(max-width:760px){.shell{padding:17px 12px}.topbar{margin-bottom:19px}.nav{margin:0;order:3;width:100%}.pill{display:none}.layout{grid-template-columns:1fr}.form-card{grid-column:auto}.dates{display:flex;overflow-x:auto;max-height:none}.date-btn{min-width:145px}.slot-wrap{padding:13px}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.slot{min-height:67px}.heading{align-items:start}h1{font-size:24px}}
 @media print{body{background:#fff}.topbar,.notice,.heading button,.dates-card,.form-card,.slots,.group-head,.stats,.visit-actions{display:none!important}.shell{padding:0;max-width:none}.layout{display:block}.card{box-shadow:none;border:0}.card-head{padding:12px 0}.slot-wrap{display:none}.list-card{margin-top:0}.list{padding:0}.visit{break-inside:avoid}}
+
+/* Tabela Particular: 69 serviços aprovados em 20/10/2026 */
+.catalog-search{border:1px solid #cbdfea!important;background:#fbfdff!important}
+.price-tools{margin:10px 0 14px}.price-tools .btn{width:100%}
+.added-list{border:1px solid #e2eaf1;border-radius:10px;overflow:hidden;background:#fbfdff;margin-bottom:13px}
+.added-row{display:grid;grid-template-columns:minmax(0,1fr) 65px auto;gap:10px;padding:11px 10px;border-bottom:1px solid #e8edf2;align-items:center}
+.added-row:last-child{border-bottom:0}
+.added-row b,.added-row small{display:block;overflow-wrap:anywhere}.added-row b{font-size:12px;color:#284c66}.added-row small{font-size:11px;color:#798c9a;margin-top:3px}
+.added-row input{width:65px;border:1px solid #ccdce8;border-radius:7px;padding:8px 4px;text-align:center}
+.added-row button{background:white;border:1px solid #ead2d4;border-radius:7px;padding:7px;color:#a23e47}
+.total{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#eef7ff;border-radius:10px;padding:15px;margin-bottom:15px;color:#376788;font-size:13px;font-weight:700}
+.total strong{font-size:24px;color:#0962b7}
+.catalog-note{font-size:11px;color:#8394a4;line-height:1.5;margin:8px 0 14px}
+.price-dialog{border:0;border-radius:14px;box-shadow:0 24px 80px #16334f66;max-width:min(900px,calc(100vw - 24px));width:900px;max-height:85vh;padding:0}
+.price-dialog::backdrop{background:#0d29486e}
+.price-dialog-head{position:sticky;top:0;background:#fff;border-bottom:1px solid #e1e9ef;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:15px;z-index:2}
+.price-dialog-head h2{font-size:19px;margin:0}.price-dialog-head p{font-size:12px;color:#8295a5;margin-top:3px}
+.price-table-tools{padding:14px 18px}.price-table-tools input{width:100%;border:1px solid #ccdbe5;border-radius:8px;padding:12px}
+.price-table-scroll{overflow:auto;max-height:58vh;padding:0 18px 22px}
+.price-table{width:100%;border-collapse:collapse;font-size:13px}.price-table th{text-align:left;background:#f0f5fa;padding:10px;color:#375d78;position:sticky;top:0}
+.price-table td{padding:9px;border-bottom:1px solid #edf1f5}.price-table td:last-child,.price-table th:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.price-table tr.group-row td{background:#f8fbfd;color:#205c91;font-weight:800;padding:12px 9px}
+@media(max-width:760px){.added-row{grid-template-columns:minmax(0,1fr) 55px auto}.price-dialog{max-height:93vh}.price-table{font-size:11px}}
 </style>
 </head>
 <body>
@@ -84,7 +107,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
 </header>
 <section class="heading">
   <div><h1>Agendamento rápido</h1><p class="muted">Dr. Diego Mendoza Gouveia · Escolha o dia, clique em um horário e preencha o paciente.</p></div>
-  <div><button class="btn" id="nextFree" type="button">Próximo horário livre</button> <button class="btn" id="print" type="button">Imprimir o dia</button></div>
+  <div><button class="btn" id="showPrices" type="button">Tabela de preços</button> <button class="btn" id="nextFree" type="button">Próximo horário livre</button> <button class="btn" id="print" type="button">Imprimir o dia</button></div>
 </section>
 <div class="notice"><strong>Protótipo de demonstração.</strong> Agendamentos ficam somente neste navegador, sem login, banco compartilhado ou sincronização com Google Drive. Não insira dados reais de pacientes até haver uma versão segura.</div>
 <div class="layout">
@@ -107,10 +130,18 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       <div class="chosen" id="chosen">2. Selecione um horário livre</div>
       <label class="field">Nome do paciente *<input id="patient" list="suggestions" maxlength="100" required placeholder="Nome completo"></label>
       <datalist id="suggestions"></datalist>
-      <label class="field">Procedimento *<input id="procedure" list="procedures" maxlength="120" required placeholder="Ex.: USG de abdome total"></label>
-      <datalist id="procedures"><option value="USG de abdome total"><option value="USG transvaginal"><option value="USG obstétrica"><option value="USG de tireoide"><option value="USG de vias urinárias"><option value="USG de mama"><option value="Consulta clínica"><option value="Consulta ortopédica"><option value="ECG"><option value="Holter"><option value="MAPA"></datalist>
+      <label class="field">Buscar na tabela Particular (69 serviços)
+        <input id="procedureSearch" class="catalog-search" type="search" placeholder="Digite USG, tireoide, consulta, Doppler..." aria-label="Filtrar procedimentos">
+      </label>
+      <label class="field">Procedimento / exame
+        <select id="procedure" aria-label="Escolha o procedimento para adicionar"></select>
+      </label>
+      <div class="price-tools"><button class="btn" type="button" id="addProcedure">＋ Adicionar procedimento à lista</button></div>
+      <div id="selectedProcedures" class="added-list" aria-label="Procedimentos selecionados"></div>
+      <div class="total"><span>Total estimado · Particular</span><strong id="totalPrice">R$ 0,00</strong></div>
+      <p class="catalog-note">Valores da tabela Particular aprovada em 20/10/2026. A tabela geral não garante que todos os serviços sejam executados pelo Dr. Diego; confirme com a clínica. Para múltiplos exames, confirme também o tempo necessário.</p>
       <div class="row2">
-        <label class="field">Tipo de atendimento<select id="service"><option>Ultrassonografia</option><option>Consulta</option><option>Procedimento</option><option>Exame</option><option>Retorno</option></select></label>
+        <label class="field">Convênio<input readonly value="Particular" aria-label="Convênio Particular"></label>
         <label class="field">Situação<select id="status"><option>Agendado</option><option>Confirmado</option><option>Concluído</option><option>Cancelado</option></select></label>
       </div>
       <label class="field">Observação (opcional)<textarea id="notes" rows="2" maxlength="350" placeholder="Informação interna de agendamento"></textarea></label>
@@ -123,6 +154,11 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
     </form>
   </aside>
 </div>
+<dialog class="price-dialog" id="priceDialog" aria-labelledby="priceTitle">
+  <div class="price-dialog-head"><div><h2 id="priceTitle">Tabela de preços · Particular</h2><p>69 serviços · Valores aprovados em 20/10/2026</p></div><button type="button" class="btn" id="closePrices">Fechar</button></div>
+  <div class="price-table-tools"><input type="search" id="priceSearch" placeholder="Pesquisar procedimento ou categoria" aria-label="Pesquisar a tabela de preços"></div>
+  <div class="price-table-scroll"><table class="price-table"><thead><tr><th>Procedimento</th><th>Valor</th></tr></thead><tbody id="priceRows"></tbody></table></div>
+</dialog>
 </main>
 <script>
 (function () {
@@ -131,6 +167,8 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   const PATIENT_KEY = 'clinica-dm-pacientes-v1';
   const DOCTOR = 'Dr. Diego Mendoza Gouveia';
   const YEAR = 2026, MONTH = '11';
+  const CATALOG = [{"category":"Consultas","name":"CONSULTA CLÍNICA","price":300},{"category":"Consultas","name":"CONSULTA ORTOPEDIA","price":300},{"category":"Cardiologia","name":"ECG-ELETROCARDIOGRAMA","price":80},{"category":"Cardiologia","name":"ECODOPPLERCARDIOGRAMA TRANSTORÁCICO","price":300},{"category":"Cardiologia","name":"HOLTER DIGITAL 24HS","price":180},{"category":"Cardiologia","name":"MAPA 24HS","price":180},{"category":"Ultrassonografia obstétrica","name":"USG MORFOLOGICA 1º TRIMESTRE (13ª A 14ª SEM)","price":380},{"category":"Ultrassonografia obstétrica","name":"USG MORFOLOGICA 1º TRIMESTRE (13ª A 14ª SEM) GEMELAR","price":608},{"category":"Ultrassonografia obstétrica","name":"USG MORFOLOGICA 2º TRIMESTRE (21ª A 24ª SEM)","price":380},{"category":"Ultrassonografia obstétrica","name":"USG MORFOLOGICA 2º TRIMESTRE (21ª A 24ª SEM) GEMELAR","price":608},{"category":"Ultrassonografia obstétrica","name":"USG OBSTETRICA","price":250},{"category":"Ultrassonografia obstétrica","name":"USG OBSTETRICA COM DOPPLERFLUXOMETRIA","price":400},{"category":"Ultrassonografia obstétrica","name":"USG OBSTETRICA GEMELAR MULTIPLA 60%","price":400},{"category":"Ultrassonografia geral","name":"USG ABDOME INFERIOR FEMININO","price":250},{"category":"Ultrassonografia geral","name":"USG ABDOME INFERIOR MASCULINO","price":250},{"category":"Ultrassonografia geral","name":"USG ABDOME SUPERIOR","price":250},{"category":"Ultrassonografia geral","name":"USG ABDOME TOTAL","price":250},{"category":"Ultrassonografia geral","name":"USG APARELHO URINARIO","price":250},{"category":"Ultrassonografia geral","name":"USG ARTICULAR/MUSCULAR/TENDÃO MUSCULO ESQUELETICO","price":250},{"category":"Ultrassonografia geral","name":"USG BOLSA ESCROTAL","price":330},{"category":"Ultrassonografia geral","name":"USG MAMAS","price":380},{"category":"Ultrassonografia geral","name":"USG ORGÃOS SUPERFICIAIS (ESCROTO/TESTICULO/PÊNIS OU CRÃNIO)","price":350},{"category":"Ultrassonografia geral","name":"USG PAREDE ABDOMINAL/REGIÃO INGNAL","price":250},{"category":"Ultrassonografia geral","name":"USG PARTES MOLES/MUSCULO E TENDÃO","price":250},{"category":"Ultrassonografia geral","name":"USG PELVICA","price":250},{"category":"Ultrassonografia geral","name":"USG PELVICA GINECOLOGICA","price":220},{"category":"Ultrassonografia geral","name":"USG PESCOÇO/PAROTIDAS-CERVICAL","price":400},{"category":"Ultrassonografia geral","name":"USG PROSTATA VIA ABDOMINAL","price":250},{"category":"Ultrassonografia geral","name":"USG PROSTATA VIA TRANSRETAL","price":300},{"category":"Ultrassonografia geral","name":"USG TIREOIDE","price":330},{"category":"Ultrassonografia geral","name":"USG TRANSVAGINAL DE RETORNO P/ CONTROLE DE OVULAÇÃO","price":180},{"category":"Ultrassonografia geral","name":"USG TRANSVAGINAL P/ CONTROLE DE OVULAÇÃO 1ª CONTAGEM DE FOLICULOS","price":400},{"category":"Ultrassonografia geral","name":"USG TRANSVAGINAL/ENDOVAGINAL","price":250},{"category":"Ultrassonografia com Doppler","name":"USG ABDOME SUPERIOR COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG ABDOME TOTAL COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG BOLSA ESCROTAL COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG CAROTIDAS E VERTEBRAIS (DOPPLER)","price":400},{"category":"Ultrassonografia com Doppler","name":"USG CERVICAL COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER ARTERIAL MEMBRO INFERIOR (CADA PERNA)","price":250},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER ARTERIAL MEMBRO SUPERIOR","price":250},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER ORGÃO ESTRUTURA ISOLADA (POWER)","price":400},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER VENOSO E ARTERIAL MEMBRO INFERIOR (CADA PERNA)","price":500},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER VENOSO E ARTERIAL MEMBRO SUPERIOR","price":500},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER VENOSO MEMBRO INFERIOR (CADA PERNA)","price":250},{"category":"Ultrassonografia com Doppler","name":"USG DOPPLER VENOSO MEMBRO SUPERIOR","price":250},{"category":"Ultrassonografia com Doppler","name":"USG MAMAS COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG MÃOS E PUNHOS COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG MUCULOESQUELÉTICO COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG TIREOIDE COM DOPPLER","price":400},{"category":"Ultrassonografia com Doppler","name":"USG TRANSVAGINAL COM DOPPLER","price":400},{"category":"Procedimentos","name":"BIOPSIA DE MAMA - CORE BIOPSY AGULHA GROSSA","price":900},{"category":"Procedimentos","name":"BIOPSIA DE PELE/TUMORES LINFONODOS SUPERFICIAIS/ TECIDO CELULAR","price":400},{"category":"Procedimentos","name":"CERUMEN - REMOÇÃO DE CERA DE CADA OUVIDO","price":120},{"category":"Procedimentos","name":"COLETA CERVICO VAGINAL/COLPOCITOLOGIA/PREVENTIVO CCO","price":150},{"category":"Procedimentos","name":"ESCLEROTERAPIA VEIAS PEQUENOS VASOS - CADA AMPOLA","price":240},{"category":"Procedimentos","name":"EXERESE EXCISIONAL (M)","price":700},{"category":"Procedimentos","name":"EXERESE EXCISIONAL (P)","price":450},{"category":"Procedimentos","name":"EXERESE INCIOSIONAL","price":400},{"category":"Procedimentos","name":"FIBRO-NASO-LARINGOSCOPIA","price":500},{"category":"Procedimentos","name":"GBS SWAB","price":250},{"category":"Procedimentos","name":"IMPLANTE DIU DISPOSITIVO UTERINO - VALOR SOMENTE DA COLOCAÇÃO","price":800},{"category":"Procedimentos","name":"MAMOTOMIA","price":4000},{"category":"Procedimentos","name":"PAAF DE TIREOIDE, CERVICAL OU PARÓTIDAS","price":300},{"category":"Procedimentos","name":"PAAF MAMAS - PUNÇÃO ASPIRATIVA AGULHA FINA","price":200},{"category":"Procedimentos","name":"POSTECTOMIA - CIRURGIA DE FIMOSE","price":4000},{"category":"Procedimentos","name":"PROCEDIMENTO OFTALMOLOGICO - PTERIGIO - CADA OLHO","price":1800},{"category":"Procedimentos","name":"VASECTOMIA - ESTERELIZAÇÃO MASCULINA","price":4000},{"category":"Procedimentos","name":"VIDEOENDOSCOPIA NASOSINUSAL","price":500},{"category":"Procedimentos","name":"VIDEOLARINGOSCOPIA","price":500}];
+  const TABLE_APPROVED = '2026-10-20';
   const SCHEDULE = [
     [2, 'Segunda-feira', [['08:00','12:00'],['13:30','19:00']]],
     [3, 'Terça-feira', [['08:00','12:00']]],
@@ -168,7 +206,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   function overlap(a,time) { const s=mins(a.time),t=mins(time); return t<s+Number(a.duration||30) && s<t+30; }
   let appointments=read(KEY);
   let selected = (DATES.find(d=>d.date>=new Date().toLocaleDateString('sv-SE'))||DATES[0]).date;
-  let selectedTime = '', editingId=null;
+  let selectedTime = '', editingId=null, selectedItems=[];
   function belongs(a,d) { return a && a.date===d && relevant(a); }
   function conflicts(date,time,id) {
     return appointments.filter(a=>belongs(a,date)&&active(a)&&a.id!==id&&overlap(a,time));
@@ -192,10 +230,81 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
     const patientNames=read(PATIENT_KEY).map(x=>x.name).filter(Boolean).sort((a,b)=>a.localeCompare(b,'pt-BR'));
     $('suggestions').replaceChildren(...patientNames.map(name=>element('option','',name)));
   }
+
+  const fmtPrice = n => Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const safeItems = items => Array.isArray(items)?items.filter(x=>x&&typeof x.name==='string').map(x=>({
+    category:String(x.category||''),
+    name:String(x.name),
+    unitPrice:Number.isFinite(Number(x.unitPrice))?Number(x.unitPrice):null,
+    quantity:Math.max(1,Math.min(99,Number(x.quantity)||1))
+  })):[];
+  function renderCatalogOptions(){
+    const query=normalize($('procedureSearch').value);
+    const select=$('procedure');select.replaceChildren(new Option('Selecione um serviço', ''));
+    const groups=new Map();
+    CATALOG.forEach((x,i)=>{
+      if(query&&!normalize(x.name+' '+x.category).includes(query))return;
+      if(!groups.has(x.category))groups.set(x.category,[]);
+      groups.get(x.category).push([x,i]);
+    });
+    for(const [category,items] of groups){
+      const grp=document.createElement('optgroup');grp.label=category;
+      for(const [item,i] of items)grp.append(new Option(item.name+' — '+fmtPrice(item.price),String(i)));
+      select.append(grp);
+    }
+    $('addProcedure').disabled=!groups.size;
+  }
+  function totalAmount(){ return selectedItems.reduce((acc,item)=>acc+(item.unitPrice??0)*item.quantity,0); }
+  function renderItems(){
+    const container=$('selectedProcedures');container.replaceChildren();
+    if(!selectedItems.length){container.append(element('p','note','Nenhum procedimento adicionado.'));$('totalPrice').textContent=fmtPrice(0);return;}
+    selectedItems.forEach((item,i)=>{
+      const row=element('div','added-row');
+      const name=element('div');name.append(element('b','',item.name),element('small','',
+        item.unitPrice===null?'Valor não cadastrado: selecione o procedimento atualizado':fmtPrice(item.unitPrice)+' por unidade'));
+      const qty=document.createElement('input');qty.type='number';qty.min='1';qty.max='99';qty.value=String(item.quantity);qty.setAttribute('aria-label','Quantidade de '+item.name);
+      qty.addEventListener('change',()=>{const val=Number(qty.value);if(!Number.isInteger(val)||val<1||val>99){qty.value=String(item.quantity);return;}item.quantity=val;renderItems();});
+      const remove=element('button','','Remover');remove.type='button';remove.setAttribute('aria-label','Remover '+item.name);
+      remove.addEventListener('click',()=>{selectedItems.splice(i,1);renderItems();});
+      row.append(name,qty,remove);container.append(row);
+    });
+    $('totalPrice').textContent=fmtPrice(totalAmount());
+  }
+  function addCatalogItem(){
+    const idx=Number($('procedure').value);
+    if($('procedure').value===''||!Number.isInteger(idx)||!CATALOG[idx]){
+      message('Selecione um procedimento da tabela para adicionar.','error');return;
+    }
+    const x=CATALOG[idx];const prior=selectedItems.find(y=>y.name===x.name);
+    if(prior)prior.quantity+=1;else selectedItems.push({category:x.category,name:x.name,unitPrice:x.price,quantity:1});
+    $('procedureSearch').value='';renderCatalogOptions();renderItems();message('Procedimento adicionado.','ok');
+  }
+  function deriveService(items){
+    const first=items[0];
+    if(!first)return 'Procedimento';
+    if(first.category==='Consultas')return 'Consulta';
+    if(first.category.startsWith('Ultrassonografia'))return 'Ultrassonografia';
+    if(first.category==='Cardiologia')return 'Exame';
+    return 'Procedimento';
+  }
+  function renderPriceTable(){
+    const query=normalize($('priceSearch').value),root=$('priceRows');root.replaceChildren();
+    let lastCategory='';
+    for(const item of CATALOG){
+      if(query&&!normalize(item.category+' '+item.name).includes(query))continue;
+      if(item.category!==lastCategory){
+        const group=element('tr','group-row');const cell=element('td','',item.category);
+        cell.colSpan=2;group.append(cell);root.append(group);lastCategory=item.category;
+      }
+      const tr=element('tr');tr.append(element('td','',item.name),element('td','',fmtPrice(item.price)));root.append(tr);
+    }
+    if(!root.children.length){const tr=element('tr'),td=element('td','','Nenhum serviço encontrado.');td.colSpan=2;tr.append(td);root.append(tr);}
+  }
+
   function selectDate(date) {
     if(!DATES.some(d=>d.date===date))return;
-    selected=date;editingId=null;selectedTime='';$('bookingForm').reset();$('cancel').hidden=true;
-    message('');render();
+    selected=date;editingId=null;selectedTime='';selectedItems=[];$('bookingForm').reset();$('cancel').hidden=true;
+    $('procedureSearch').value='';renderCatalogOptions();renderItems();message('');render();
   }
   function choose(time,id) {
     const d=dayData();
@@ -204,8 +313,15 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
     $('bookingForm').reset();
     const a=id?byId(id):null;
     $('patient').value=a?.patient||'';
-    $('procedure').value=a?.procedure||a?.service||'';
-    $('service').value=a?.service||'Ultrassonografia';
+    selectedItems=safeItems(a?.procedures);
+    if(!selectedItems.length&&a?.procedure){
+      const parts=String(a.procedure).split(/\s+\+\s+/);
+      selectedItems=parts.map(name=>{
+        const cat=CATALOG.find(x=>normalize(x.name)===normalize(name));
+        return {category:cat?.category||'Legado',name,unitPrice:cat?.price??null,quantity:1};
+      });
+    }
+    $('procedureSearch').value='';renderCatalogOptions();renderItems();
     $('status').value=a?.status||'Agendado';
     $('notes').value=a?.notes||'';
     $('cancel').hidden=!a||a.status==='Cancelado';
@@ -270,7 +386,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       const line=element('div','visit'+(a.status==='Cancelado'?' cancelled':''));
       const info=element('div','visit-main');const t=element('span','visit-time',a.time);
       const name=element('strong','',a.patient);
-      const small=element('small','',(a.procedure||a.service)+' · '+a.status);
+      const small=element('small','',(a.procedure||a.service)+' · '+a.status+(Number.isFinite(Number(a.amount))&&a.amount!==undefined?' · '+fmtPrice(a.amount):''));
       info.append(t,name,small);
       const actions=element('div','visit-actions');
       const edit=element('button','btn small','Editar');edit.type='button';
@@ -293,9 +409,13 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   function render() {appointments=read(KEY);renderDates();renderSlots();renderList();renderForm();}
   $('bookingForm').addEventListener('submit',ev=>{
     ev.preventDefault();
-    const d=dayData(),time=selectedTime,patient=$('patient').value.trim().replace(/\s+/g,' '),procedure=$('procedure').value.trim(),service=$('service').value,status=$('status').value,notes=$('notes').value.trim();
+    const d=dayData(),time=selectedTime,patient=$('patient').value.trim().replace(/\s+/g,' '),status=$('status').value,notes=$('notes').value.trim();
     if(!d.times.includes(time)){message('Primeiro escolha um horário disponível.','error');return;}
-    if(patient.length<2||!procedure){message('Informe o nome e o procedimento.','error');return;}
+    if(patient.length<2){message('Informe o nome do paciente.','error');return;}
+    if(selectedItems.some(x=>x.unitPrice===null)){message('Há um procedimento antigo sem preço; substitua pelo item da tabela.','error');return;}
+    if(!selectedItems.length){message('Adicione pelo menos um procedimento da tabela.','error');return;}
+    const service=deriveService(selectedItems);
+    const procedure=selectedItems.map(x=>x.name+(x.quantity>1?' (x'+x.quantity+')':'')).join(' + ');
     appointments=read(KEY);
     const c=conflicts(d.date,time,editingId);
     if(status!=='Cancelado'&&c.length){message('Este horário já está ocupado. Escolha outro.','error');render();return;}
@@ -304,7 +424,10 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
     const match=read(PATIENT_KEY).find(p=>normalize(p.name)===normalize(patient));
     const next={...(existing||{}),id:existing?.id||(globalThis.crypto?.randomUUID?.()||String(Date.now())+'-'+String(Math.random()).slice(2)),date:d.date,time,
       patient,patientId:match?.id||existing?.patientId||null,service,procedure,professional:DOCTOR,
-      status,duration:existing?.duration||30,quantity:existing?.quantity||1,blocked:false,notes};
+      status,duration:existing?.duration||30,quantity:selectedItems.reduce((s,x)=>s+x.quantity,0),
+      procedures:selectedItems.map(x=>({...x,subtotal:x.unitPrice*x.quantity})),
+      amount:totalAmount(),insurance:'Particular',priceTable:'DM PARTICULAR',priceTableApproved:TABLE_APPROVED,
+      blocked:false,notes};
     const updated=existing?appointments.map(a=>a.id===existing.id?next:a):[...appointments,next];
     if(saveAll(updated)){const edit=!!existing;editingId=next.id;message(edit?'Agendamento atualizado.':'Agendamento salvo com sucesso.','ok');render();}
   });
@@ -318,13 +441,20 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
     const updated=appointments.map(a=>a.id===editingId?{...a,status:'Cancelado'}:a);
     if(saveAll(updated)){editingId=null;selectedTime='';$('bookingForm').reset();message('Agendamento cancelado. O horário voltou a ficar livre.','ok');render();}
   });
+  $('procedureSearch').addEventListener('input',renderCatalogOptions);
+  $('procedure').addEventListener('change',()=>{if($('procedure').value!=='')addCatalogItem();});
+  $('addProcedure').addEventListener('click',addCatalogItem);
+  $('showPrices').addEventListener('click',()=>{$('priceSearch').value='';renderPriceTable();$('priceDialog').showModal();});
+  $('closePrices').addEventListener('click',()=>$('priceDialog').close());
+  $('priceSearch').addEventListener('input',renderPriceTable);
+  $('priceDialog').addEventListener('click',event=>{if(event.target===$('priceDialog'))$('priceDialog').close();});
   $('nextFree').addEventListener('click',()=>{
     for(const d of DATES){const free=d.times.find(t=>!occupants(d.date,t).length);if(free){selected=d.date;choose(free,null);return;}}
     message('Não existem horários livres na agenda.','error');
   });
   $('print').addEventListener('click',()=>window.print());
   window.addEventListener('storage',e=>{if(e.key===KEY||e.key===PATIENT_KEY){refreshPatients();render();}});
-  refreshPatients();render();
+  refreshPatients();renderCatalogOptions();renderItems();render();
 })();
 </script>
 </body>
