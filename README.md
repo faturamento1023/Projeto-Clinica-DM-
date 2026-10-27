@@ -13,11 +13,11 @@ Protótipo HTML5 para o fluxo da recepção.
 ## Agendamento rápido do Dr. Diego (novembro de 2026)
 
 - Abra `agendar.html` para escolher um dos 16 dias da escala e um horário livre.
-- Horários de 30 em 30 minutos; períodos isolados conservam somente o horário informado.
+- A grade de novembro foi alinhada aos **161 horários exatos** existentes nas 16 abas da planilha Google Drive da Clínica DM (revisão em 27/10/2026).
 - Preencha o nome e pesquise o procedimento diretamente, sem cadastro prévio.
 - **Tabela Particular:** 69 serviços e preços do PDF *DM Tabela Valores Particular*, valores aprovados em 20/10/2026.
 - A busca permite selecionar mais de um procedimento e ajustar quantidades, mostrando preço unitário e total automático. A tabela completa é acessível pelo botão **Tabela de preços**.
-- As 16 datas e faixas horárias informadas do Dr. Diego estão carregadas no `agendar.html`. A grade usa intervalos de 30 minutos nos períodos e conserva os horários isolados.
+- Inclui os horários adicionais preenchidos na planilha em 04, 09, 11, 12, 16, 19, 23 e 26/11. Alterações futuras feitas na planilha precisam ser importadas novamente; não há sincronização automática.
 - Esta tabela reúne os serviços da clínica, não a relação de atos executados especificamente pelo Dr. Diego. Confirme o profissional e o tempo necessário, especialmente para múltiplos exames.
 - Confira os agendamentos do dia, edite, cancele e imprima.
 - As alterações usam `clinica-dm-agendamentos-v1`, como a tela principal `index.html`, mas **apenas no mesmo navegador e origem**. A planilha do Google Drive **não** é sincronizada.
