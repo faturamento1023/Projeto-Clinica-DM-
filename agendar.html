@@ -136,7 +136,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       <label class="field">Procedimento / exame
         <select id="procedure" aria-label="Escolha o procedimento para adicionar"></select>
       </label>
-      <div class="price-tools"><button class="btn" type="button" id="addProcedure">＋ Adicionar procedimento à lista</button></div>
+      <p class="catalog-note">Ao selecionar um item, ele entra automaticamente na lista abaixo. É possível adicionar mais de um exame ao mesmo agendamento.</p>
       <div id="selectedProcedures" class="added-list" aria-label="Procedimentos selecionados"></div>
       <div class="total"><span>Total estimado · Particular</span><strong id="totalPrice">R$ 0,00</strong></div>
       <p class="catalog-note">Valores da tabela Particular aprovada em 20/10/2026. A tabela geral não garante que todos os serviços sejam executados pelo Dr. Diego; confirme com a clínica. Para múltiplos exames, confirme também o tempo necessário.</p>
@@ -252,7 +252,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       for(const [item,i] of items)grp.append(new Option(item.name+' — '+fmtPrice(item.price),String(i)));
       select.append(grp);
     }
-    $('addProcedure').disabled=!groups.size;
+    $('procedure').disabled=!groups.size;
   }
   function totalAmount(){ return selectedItems.reduce((acc,item)=>acc+(item.unitPrice??0)*item.quantity,0); }
   function renderItems(){
@@ -443,7 +443,6 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   });
   $('procedureSearch').addEventListener('input',renderCatalogOptions);
   $('procedure').addEventListener('change',()=>{if($('procedure').value!=='')addCatalogItem();});
-  $('addProcedure').addEventListener('click',addCatalogItem);
   $('showPrices').addEventListener('click',()=>{$('priceSearch').value='';renderPriceTable();$('priceDialog').showModal();});
   $('closePrices').addEventListener('click',()=>$('priceDialog').close());
   $('priceSearch').addEventListener('input',renderPriceTable);
