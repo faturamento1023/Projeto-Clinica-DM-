@@ -44,6 +44,9 @@ h1{margin:0 0 5px;font-size:29px;color:#1164b9;letter-spacing:-.04em}p{margin:0}
 .slot{min-height:78px;text-align:left;border:1px solid #cfe5d6;background:#f0faf4;color:#276347;padding:11px 12px;border-radius:10px;transition:background .15s,border .15s}
 .slot:hover{border-color:#75c19a;background:#e1f6e9}
 .slot.selected{outline:2px solid #126cc7;outline-offset:1px;border-color:#126cc7}
+.slot.fit-slot{border-color:#d5caed;background:#f5f0ff;color:#58427c}
+.slot.fit-slot:hover{background:#eae1fa}
+.slot.fit-slot.occupied{background:#fff4e4;border-color:#f3d5a9;color:#86551c}
 .slot.occupied{background:#fff4e4;border-color:#f3d5a9;color:#86551c}.slot.occupied:hover{background:#ffefd5}
 .slot.blocked{background:#edf0f2;border-color:#d2d9de;color:#586b7c}
 .slot strong{display:block;font-size:17px}.slot span{display:block;font-size:11px;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -431,7 +434,15 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   const slotsFor = segments => segments.flatMap(s => Array.isArray(s)
     ? Array.from({length: Math.max(0,(mins(s[1])-mins(s[0]))/30)}, (_,i)=>clock(mins(s[0])+i*30))
     : [s]);
-  const DATES = SCHEDULE.map(([d,weekday,segments]) => ({day:d,weekday,date:key(d),times:slotsFor(segments)}));
+  const FIT_IN_COUNT = 10;
+  const fitInLabel = n => 'Encaixe ' + pad(n);
+  const isFitIn = time => /^Encaixe (0[1-9]|10)$/.test(String(time||''));
+  const DATES = SCHEDULE.map(([d,weekday,segments]) => {
+    const times = slotsFor(segments);
+    const hasAfternoon = times.some(t => mins(t) >= 12*60);
+    return {day:d,weekday,date:key(d),times,fitSlots:hasAfternoon?Array.from({length:FIT_IN_COUNT},(_,i)=>fitInLabel(i+1)):[]};
+  });
+  const allSlots = d => [...d.times,...d.fitSlots];
   function read(keyName) {
     try { const value=JSON.parse(localStorage.getItem(keyName)||'[]'); return Array.isArray(value)?value:[]; }
     catch { return []; }
@@ -439,7 +450,11 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   function normalize(v) { return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase().replace(/\s+/g,' '); }
   function relevant(a) { return a && (normalize(a.professional).includes('diego') || (!a.professional && a.blocked)); }
   function active(a) { return a.status !== 'Cancelado'; }
-  function overlap(a,time) { const s=mins(a.time),t=mins(time); return t<s+Number(a.duration||30) && s<t+30; }
+  function overlap(a,time) {
+    if(isFitIn(time)||isFitIn(a.time))return a.time===time;
+    const s=mins(a.time),t=mins(time);
+    return t<s+Number(a.duration||30) && s<t+30;
+  }
   let appointments=read(KEY);
   let selected = (DATES.find(d=>d.date>=new Date().toLocaleDateString('sv-SE'))||DATES[0]).date;
   let selectedTime = '', editingId=null, selectedItems=[];
@@ -449,8 +464,10 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   }
   function occupants(date,time) { return conflicts(date,time,null); }
   function availability(day) {
-    const busy=day.times.filter(t=>occupants(day.date,t).length).length;
-    return {busy,free:day.times.length-busy};
+    const all=allSlots(day);
+    const busy=all.filter(t=>occupants(day.date,t).length).length;
+    const fitBusy=day.fitSlots.filter(t=>occupants(day.date,t).length).length;
+    return {busy,free:all.length-busy,fitBusy,fitFree:day.fitSlots.length-fitBusy};
   }
   function element(tag,cls,text) {
     const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;
@@ -544,7 +561,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   }
   function choose(time,id) {
     const d=dayData();
-    if(!d.times.includes(time))return;
+    if(!allSlots(d).includes(time))return;
     selectedTime=time;editingId=id||null;
     $('bookingForm').reset();
     const a=id?byId(id):null;
@@ -571,7 +588,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       const n=availability(d);
       const btn=element('button','date-btn'+(selected===d.date?' active':''));
       btn.type='button';btn.setAttribute('aria-pressed',selected===d.date);
-      const info=element('span');info.append(element('strong','',pad(d.day)+'/11 · '+d.weekday.split('-')[0]),element('small','',n.free+' livres de '+d.times.length));
+      const info=element('span');info.append(element('strong','',pad(d.day)+'/11 · '+d.weekday.split('-')[0]),element('small','',n.free+' livres de '+allSlots(d).length+(d.fitSlots.length?' · '+n.fitFree+' encaixes livres':'')));
       btn.append(info,element('span','counter',n.busy+'/'+d.times.length));
       btn.addEventListener('click',()=>selectDate(d.date));
       root.append(btn);
@@ -580,27 +597,28 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   function renderSlots() {
     const d=dayData(),counts=availability(d);
     $('dayTitle').textContent=pad(d.day)+'/11/2026 · '+d.weekday;
-    $('daySub').textContent='2. Clique em um horário verde para agendar. Clique em um ocupado para editar.';
+    $('daySub').textContent='2. Clique em um horário ou encaixe livre. Os 10 encaixes da tarde não têm horário fixo.';
     $('freeCount').textContent=counts.free;
     $('occupiedCount').textContent=counts.busy;
-    $('totalCount').textContent=d.times.length;
+    $('totalCount').textContent=d.times.length+d.fitSlots.length;
     const wrap=$('slotWrap');wrap.replaceChildren();
     const groups=[
       {title:'Manhã',times:d.times.filter(t=>mins(t)<12*60)},
-      {title:'Tarde / noite',times:d.times.filter(t=>mins(t)>=12*60)}
+      {title:'Tarde / noite',times:d.times.filter(t=>mins(t)>=12*60)},
+      {title:'Encaixes da tarde · sem horário fixo',times:d.fitSlots,isFitIn:true}
     ];
     groups.filter(g=>g.times.length).forEach(g=>{
       const section=element('section','group'),top=element('div','group-head');
-      top.append(element('h3','',g.title),element('small','',g.times.length+' horário(s)'));
+      top.append(element('h3','',g.title),element('small','',g.times.length+(g.isFitIn?' vagas extras':' horário(s)')));
       const grid=element('div','slots');
       g.times.forEach(time=>{
         const match=occupants(d.date,time)[0];
         const isEditing=editingId&&byId(editingId)?.date===d.date&&selectedTime===time;
         const row=match||(isEditing?byId(editingId):null);
         const blocked=row?.blocked===true;
-        const btn=element('button','slot '+(row?(blocked?'blocked':'occupied'):'')+(selectedTime===time?' selected':''));
+        const btn=element('button','slot '+(g.isFitIn?'fit-slot ':'')+(row?(blocked?'blocked':'occupied'):'')+(selectedTime===time?' selected':''));
         btn.type='button';btn.setAttribute('aria-pressed',selectedTime===time);
-        const label=row?(blocked?'Bloqueado':row.patient):'Livre';
+        const label=row?(blocked?'Bloqueado':row.patient):(g.isFitIn?'Encaixe livre':'Livre');
         btn.setAttribute('aria-label',time+' · '+label);
         btn.append(element('strong','',time),element('span','',label));
         btn.addEventListener('click',()=>{
@@ -627,7 +645,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       const actions=element('div','visit-actions');
       const edit=element('button','btn small','Editar');edit.type='button';
       edit.addEventListener('click',()=>{
-        if(!d.times.includes(a.time)){message('O horário não está na grade de novembro. Edite pelo calendário principal.','error');return;}
+        if(!allSlots(d).includes(a.time)){message('A vaga não está na grade de novembro. Edite pelo calendário principal.','error');return;}
         choose(a.time,a.id);
       });
       actions.append(edit);line.append(info,actions);root.append(line);
@@ -636,7 +654,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   function renderForm() {
     const d=dayData();
     $('chosen').textContent=selectedTime
-      ? '✓ '+pad(d.day)+'/11/2026 às '+selectedTime
+      ? '✓ '+pad(d.day)+'/11/2026 · '+(isFitIn(selectedTime)?selectedTime+' (tarde, sem horário fixo)':'às '+selectedTime)
       : '2. Selecione um horário livre';
     $('formHeading').textContent=editingId?'Editar agendamento':'3. Dados do paciente';
     $('save').textContent=editingId?'Salvar alterações':'Salvar agendamento';
@@ -646,7 +664,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   $('bookingForm').addEventListener('submit',ev=>{
     ev.preventDefault();
     const d=dayData(),time=selectedTime,patient=$('patient').value.trim().replace(/\s+/g,' '),status=$('status').value,notes=$('notes').value.trim();
-    if(!d.times.includes(time)){message('Primeiro escolha um horário disponível.','error');return;}
+    if(!allSlots(d).includes(time)){message('Primeiro escolha um horário ou encaixe disponível.','error');return;}
     if(patient.length<2){message('Informe o nome do paciente.','error');return;}
     if(selectedItems.some(x=>x.unitPrice===null)){message('Há um procedimento antigo sem preço; substitua pelo item da tabela.','error');return;}
     if(!selectedItems.length){message('Adicione pelo menos um procedimento da tabela.','error');return;}
@@ -663,7 +681,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
       status,duration:existing?.duration||30,quantity:selectedItems.reduce((s,x)=>s+x.quantity,0),
       procedures:selectedItems.map(x=>({...x,subtotal:x.unitPrice*x.quantity})),
       amount:totalAmount(),insurance:'Particular',priceTable:'DM PARTICULAR',priceTableApproved:TABLE_APPROVED,
-      blocked:false,notes};
+      fitIn:isFitIn(time),blocked:false,notes};
     const updated=existing?appointments.map(a=>a.id===existing.id?next:a):[...appointments,next];
     if(saveAll(updated)){const edit=!!existing;editingId=next.id;message(edit?'Agendamento atualizado.':'Agendamento salvo com sucesso.','ok');render();}
   });
@@ -684,7 +702,7 @@ label.field{display:block;font-size:12px;font-weight:750;color:#587387;margin:0 
   $('priceSearch').addEventListener('input',renderPriceTable);
   $('priceDialog').addEventListener('click',event=>{if(event.target===$('priceDialog'))$('priceDialog').close();});
   $('nextFree').addEventListener('click',()=>{
-    for(const d of DATES){const free=d.times.find(t=>!occupants(d.date,t).length);if(free){selected=d.date;choose(free,null);return;}}
+    for(const d of DATES){const free=allSlots(d).find(t=>!occupants(d.date,t).length);if(free){selected=d.date;choose(free,null);return;}}
     message('Não existem horários livres na agenda.','error');
   });
   $('print').addEventListener('click',()=>window.print());
