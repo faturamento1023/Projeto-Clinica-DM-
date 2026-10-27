@@ -14,6 +14,8 @@ Protótipo HTML5 para o fluxo da recepção.
 
 - Abra `agendar.html` para escolher um dos 16 dias da escala e um horário livre.
 - A grade de novembro foi alinhada aos **161 horários exatos** existentes nas 16 abas da planilha Google Drive da Clínica DM (revisão em 27/10/2026).
+- **Encaixes:** 10 vagas extras sem horário fixo em cada um dos 15 dias com atendimento à tarde (150 vagas ao todo). Os encaixes são numerados de `Encaixe 01` a `Encaixe 10`, além dos horários normais; 03/11 é somente pela manhã.
+- Na tela `agendar.html`, os encaixes podem ser reservados, editados e cancelados. O calendário tradicional `index.html` não exibe essas vagas sem horário fixo na grade; para gerenciá-las, use `agendar.html`.
 - Preencha o nome e pesquise o procedimento diretamente, sem cadastro prévio.
 - **Tabela Particular:** 69 serviços e preços do PDF *DM Tabela Valores Particular*, valores aprovados em 20/10/2026.
 - A busca permite selecionar mais de um procedimento e ajustar quantidades, mostrando preço unitário e total automático. A tabela completa é acessível pelo botão **Tabela de preços**.
