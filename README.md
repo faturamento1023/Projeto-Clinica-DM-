@@ -10,6 +10,15 @@ Protótipo HTML5 para o fluxo da recepção.
 - `queue.html`: emissão, chamada, repetição e impressão de senhas.
 - `display.html`: painel público para TV, com senha e sala, sem nome do paciente.
 
+## Agendamento rápido do Dr. Diego (novembro de 2026)
+
+- Abra `agendar.html` para escolher um dos 16 dias da escala e um horário livre.
+- Horários de 30 em 30 minutos; períodos isolados conservam somente o horário informado.
+- Preencha nome e procedimento diretamente, sem cadastro prévio.
+- Confira os agendamentos do dia, edite, cancele e imprima.
+- As alterações usam `clinica-dm-agendamentos-v1`, como a tela principal `index.html`, mas **apenas no mesmo navegador e origem**. A planilha do Google Drive **não** é sincronizada.
+- **Não use dados reais de pacientes:** esta versão é um protótipo local sem login, banco compartilhado nem controles de segurança.
+
 ## Como experimentar
 
 Sirva a pasta por HTTP (por exemplo, `python -m http.server 8000`) e abra `http://localhost:8000/`.
